@@ -69,6 +69,11 @@ async function submitForm() {
     title: 'contact.success',
   });
 }
+
+const whoAmI = async () => {
+  const response = await useListUsers();
+  console.log(response.value);
+};
 </script>
 
 <template>
@@ -84,6 +89,13 @@ async function submitForm() {
       <h2 class="text-4xl text-center font-bold mb-6">
         {{ $t('messenger.title') }}
       </h2>
+      <button
+        @click="whoAmI"
+        type="button"
+        class="rounded-md bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+      >
+        Test Self Endpoint (see console)
+      </button>
 
       <!-- Table -->
       <div class="max-w-[900px] mx-auto mt-8">
