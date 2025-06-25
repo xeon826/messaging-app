@@ -10,7 +10,7 @@ export default defineEventHandler(async () => {
     changefreq: "daily",
   });
   sitemap.write({
-    url: "/contact",
+    url: "/messenger",
     changefreq: "daily",
   });
   sitemap.end();

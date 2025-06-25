@@ -1,8 +1,8 @@
 {
   "hero": {
-    "part1": "Not like other starters you've seen",
-    "part2": "This one is made with ❤",
-    "subtitle": "Enjoy the power of Nuxt 3, NuxtUI coupled with TailwindCSS, Bun, Resend and other with just git clone !!!",
+    "part1": "Messaging App",
+    "part2": "Made with ❤",
+    "subtitle": "Built with Nuxt 3, NuxtUI, coupled with TailwindCSS, and Bun !!!",
     "cta": "Get Started"
   },
   "test": "Test notifications",

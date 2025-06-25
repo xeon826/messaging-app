@@ -1,4 +1,4 @@
-export type ContactEmail = {
+export type Messenger = {
   email: string;
   subject: string;
   message: string;

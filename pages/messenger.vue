@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 definePageMeta({
-  title: "Contact",
-  name: "Contact",
-  path: "/contact",
+  title: "Messenger",
+  name: "Messenger",
+  path: "/messenger",
 });
 
 const toastStore = useToastStore();
