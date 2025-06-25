@@ -36,6 +36,7 @@ export default defineNuxtConfig({
     "@nuxthq/ui",
     "nuxt-svgo",
     "@nuxt/image",
+    "@nuxtjs/supabase",
   ],
 
   colorMode: {
@@ -62,7 +63,7 @@ export default defineNuxtConfig({
         iso: 'fr-FR'
       }
     ],
-    baseUrl: 'https://nuxt-starter.com',
+    baseUrl: 'http://localhost:3000',
     vueI18n: "~/i18n.config.ts",
   },
 
