@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 
-const navigation = getNavigation("home");
+const navigation = getNavigation('home');
 
 const user = useSupabaseUser();
 </script>
@@ -28,7 +28,6 @@ const user = useSupabaseUser();
           class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start"
         >
           <div class="flex flex-shrink-0 items-center">
-
             <span class="text-md font-bold text-primary ml-2"
               >Messaging App</span
             >
@@ -48,7 +47,7 @@ const user = useSupabaseUser();
                 ]"
                 :aria-current="item.current ? 'page' : undefined"
               >
-                {{ $t("navigation." + item.name.toLowerCase()) }}
+                {{ $t('navigation.' + item.name.toLowerCase()) }}
               </NuxtLink>
             </div>
           </div>
@@ -57,6 +56,7 @@ const user = useSupabaseUser();
           class="absolute gap-5 inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
         >
           <Tools class="hidden md:flex" />
+          <ProfileTool v-if="user" />
           <div
             class="hidden tablet:block h-6 w-px bg-accent-faded border-l border-gray-200 border-opacity-25"
           ></div>
@@ -67,13 +67,13 @@ const user = useSupabaseUser();
                 :to="{ name: 'Login' }"
                 class="text-primary hover:bg-gray-800 hover:text-white px-4 py-1 rounded-md text-sm font-medium"
               >
-                {{ $t("navigation.login") }}
+                {{ $t('navigation.login') }}
               </NuxtLink>
               <NuxtLink
                 :to="{ name: 'Signup' }"
                 class="text-inverted bg-accent hover:bg-accent-hover px-4 py-1 rounded-md text-sm font-medium"
               >
-                {{ $t("navigation.signup") }}
+                {{ $t('navigation.signup') }}
               </NuxtLink>
             </div>
           </client-only>
@@ -94,7 +94,7 @@ const user = useSupabaseUser();
           ]"
           :aria-current="item.current ? 'page' : undefined"
         >
-          {{ $t("navigation." + item.name.toLowerCase()) }}
+          {{ $t('navigation.' + item.name.toLowerCase()) }}
         </NuxtLink>
       </div>
       <Tools class="my-4" />
@@ -107,13 +107,13 @@ const user = useSupabaseUser();
             :to="{ name: 'Login' }"
             class="text-primary hover:bg-gray-800 hover:text-white px-4 py-1 rounded-md text-sm font-medium"
           >
-            {{ $t("navigation.login") }}
+            {{ $t('navigation.login') }}
           </NuxtLink>
           <NuxtLink
             :to="{ name: 'Signup' }"
             class="text-inverted bg-accent hover:bg-accent-hover px-4 py-1 rounded-md text-sm font-medium"
           >
-            {{ $t("navigation.signup") }}
+            {{ $t('navigation.signup') }}
           </NuxtLink>
         </div>
       </client-only>

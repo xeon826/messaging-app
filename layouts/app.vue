@@ -175,7 +175,7 @@ const sidebarOpen = ref(false);
           </div>
           <div class="ml-4 flex items-center md:ml-6">
             <Tools />
-            <ProfilTool />
+            <ProfileTool />
           </div>
         </div>
       </div>
