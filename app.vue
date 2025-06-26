@@ -1,5 +1,13 @@
 <script lang="ts" setup>
 const { appName } = useAppConfig();
+const user = useSupabaseUser();
+
+// Watch for auth state changes
+watchEffect(() => {
+  // You can add global auth state handling here if needed
+  console.log('Auth state changed:', user.value ? 'logged in' : 'logged out');
+});
+
 useHead({
   title: appName,
   meta: [

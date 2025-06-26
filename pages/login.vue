@@ -8,7 +8,7 @@ definePageMeta({
 const login = ref("");
 const password = ref("");
 
-const { auth } = useSupabaseAuthClient();
+const { auth } = useSupabaseClient();
 const user = useSupabaseUser();
 
 watchEffect(async () => {
@@ -56,7 +56,7 @@ const signWithGoogle = async () => {
       <img
         class="mx-auto h-12 w-auto"
         src="../assets/media/logo.svg"
-        alt="Your Company"
+        alt="Messaging App"
       />
       <h2
         class="mt-6 text-center text-3xl font-bold tracking-tight text-primary"
@@ -137,3 +137,4 @@ const signWithGoogle = async () => {
     </div>
   </div>
 </template>
+

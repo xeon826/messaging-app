@@ -31,12 +31,12 @@ const user = useSupabaseUser();
             <img
               class="block h-6 w-auto lg:hidden"
               src="../assets/media/logo.svg"
-              alt="Your Company"
+              alt="Messaging App"
             />
             <img
               class="hidden h-6 w-auto lg:block"
               src="../assets/media/logo.svg"
-              alt="Your Company"
+              alt="Messaging App"
             />
             <span class="text-md font-bold text-primary ml-2"
               >Nuxt3 Starter</span

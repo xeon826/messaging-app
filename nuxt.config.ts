@@ -39,6 +39,14 @@ export default defineNuxtConfig({
     "@nuxtjs/supabase",
   ],
 
+  supabase: {
+    redirectOptions: {
+      login: '/login',
+      callback: '/confirm',
+      exclude: ['/', '/signup'],
+    },
+  },
+
   colorMode: {
     preference: 'system',
     fallback: 'dark',
