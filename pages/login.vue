@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useSupabaseClient, useSupabaseUser } from '#imports'
+
 definePageMeta({
   name: "Login",
   title: "Login",
@@ -7,46 +9,104 @@ definePageMeta({
 
 const login = ref("");
 const password = ref("");
+const error = ref<string | null>(null);
 
-const { auth } = useSupabaseClient();
+const client = useSupabaseClient();
 const user = useSupabaseUser();
+const loading = ref(false);
 
-watchEffect(async () => {
+// Add debug logging for initial state
+console.log('Initial auth state:', { user: user.value, client });
+
+// Redirect if already logged in
+watchEffect(() => {
+  console.log('watchEffect triggered, user:', user.value);
   if (user.value) {
-    await navigateTo("/app/profile");
+    navigateTo("/app/profile");
   }
 });
 
-const loading = ref(false);
+const signin = async (event: Event) => {
+  // Add form submission debugging
+  console.log('Sign in attempted', { login: login.value });
+  
+  try {
+    error.value = null;
+    loading.value = true;
+    
+    if (!login.value || !password.value) {
+      error.value = "Please fill in all fields";
+      return;
+    }
 
-const signin = async () => {
-  loading.value = true;
-  const { error } = await auth.signInWithPassword({
-    email: login.value,
-    password: password.value,
-  });
-  if (error) console.log(error);
-  loading.value = false;
+    console.log('Attempting to sign in with Supabase...');
+    const { data, error: authError } = await client.auth.signInWithPassword({
+      email: login.value,
+      password: password.value,
+    });
+
+    console.log('Sign in response:', { data, error: authError });
+
+    if (authError) {
+      error.value = authError.message;
+      return;
+    }
+
+    if (data?.user) {
+      console.log('Sign in successful, user:', data.user);
+      // Clear form
+      login.value = "";
+      password.value = "";
+      // Navigation will be handled by the watchEffect
+    }
+  } catch (e) {
+    console.error('Sign in error:', e);
+    error.value = "An unexpected error occurred";
+  } finally {
+    loading.value = false;
+  }
 };
 
 const signWithGithub = async () => {
-  const { error } = await auth.signInWithOAuth({
-    provider: "github",
-    options: {
-      redirectTo: window.location.origin + "/app/profile",
-    },
-  });
-  if (error) console.log(error);
+  console.log('GitHub sign in attempted');
+  try {
+    error.value = null;
+    const { error: authError } = await client.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: `${window.location.origin}/app/profile`,
+      },
+    });
+
+    console.log('GitHub auth response:', { error: authError });
+    if (authError) {
+      error.value = authError.message;
+    }
+  } catch (e) {
+    console.error('GitHub sign in error:', e);
+    error.value = "Failed to sign in with Github";
+  }
 };
 
 const signWithGoogle = async () => {
-  const { error, } = await auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: window.location.origin + "/app/profile",
-    },
-  });
-  if (error) console.log(error);
+  console.log('Google sign in attempted');
+  try {
+    error.value = null;
+    const { error: authError } = await client.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/app/profile`,
+      },
+    });
+
+    console.log('Google auth response:', { error: authError });
+    if (authError) {
+      error.value = authError.message;
+    }
+  } catch (e) {
+    console.error('Google sign in error:', e);
+    error.value = "Failed to sign in with Google";
+  }
 };
 </script>
 
@@ -58,24 +118,30 @@ const signWithGoogle = async () => {
         src="../assets/media/logo.svg"
         alt="Messaging App"
       />
-      <h2
-        class="mt-6 text-center text-3xl font-bold tracking-tight text-primary"
-      >
+      <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-primary">
         Sign in to your account
       </h2>
     </div>
     <div class="sm:mx-auto sm:w-full sm:max-w-md mt-12">
-      <Loader v-if="loading" />
-      <form class="space-y-6" @submit.prevent="signin" v-else>
+      <!-- Error Alert -->
+      <div v-if="error" class="mb-4 p-4 bg-red-100 text-red-700 rounded-md">
+        {{ error }}
+      </div>
+
+      <div v-if="loading" class="text-center">
+        <p>Loading...</p>
+      </div>
+      <form v-else class="space-y-6" @submit.prevent="signin">
         <div>
           <div class="mt-1">
             <input
               id="login"
               name="login"
+              type="email"
               autocomplete="email"
               required
-              placeholder="Login"
-              class="input"
+              placeholder="Email"
+              class="input w-full"
               v-model="login"
             />
           </div>
@@ -89,7 +155,7 @@ const signWithGoogle = async () => {
               autocomplete="current-password"
               required
               placeholder="Password"
-              class="input"
+              class="input w-full"
               v-model="password"
             />
           </div>
@@ -99,18 +165,24 @@ const signWithGoogle = async () => {
             <NuxtLink
               :to="{ name: 'ForgotPassword' }"
               class="font-medium text-accent hover:text-accent-hover"
-            >Forgot your password?
-            </NuxtLink
             >
+              Forgot your password?
+            </NuxtLink>
           </div>
         </div>
 
         <div>
-          <button type="submit" class="btn-primary">Sign in</button>
+          <button 
+            type="submit" 
+            class="w-full btn-primary"
+            :disabled="loading"
+          >
+            {{ loading ? 'Signing in...' : 'Sign in' }}
+          </button>
         </div>
       </form>
-      <NuxtLink :to="{ name: 'Signup' }" class="btn-secondary mt-6">
-        Don't have an account ? Sign up
+      <NuxtLink :to="{ name: 'Signup' }" class="block w-full btn-secondary mt-6 text-center">
+        Don't have an account? Sign up
       </NuxtLink>
       <div class="mt-12">
         <div class="relative">
@@ -123,16 +195,24 @@ const signWithGoogle = async () => {
         </div>
       </div>
       <div class="mt-6 grid grid-cols-2 gap-3">
-        <div>
-          <button type="button" class="btn-secondary" @click="signWithGoogle">
-            <i class="fab fa-google mr-2"></i>
-          </button>
-        </div>
-        <div>
-          <button type="button" class="btn-secondary" @click="signWithGithub">
-            <i class="fab fa-github mr-2"></i>
-          </button>
-        </div>
+        <button 
+          type="button" 
+          class="w-full btn-secondary" 
+          @click="signWithGoogle"
+          :disabled="loading"
+        >
+          <i class="fab fa-google mr-2"></i>
+          Google
+        </button>
+        <button 
+          type="button" 
+          class="w-full btn-secondary" 
+          @click="signWithGithub"
+          :disabled="loading"
+        >
+          <i class="fab fa-github mr-2"></i>
+          GitHub
+        </button>
       </div>
     </div>
   </div>
