@@ -56,12 +56,11 @@ const user = useSupabaseUser();
           class="absolute gap-5 inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
         >
           <Tools class="hidden md:flex" />
-          <ProfileTool v-if="user" />
           <div
             class="hidden tablet:block h-6 w-px bg-accent-faded border-l border-gray-200 border-opacity-25"
           ></div>
           <client-only>
-            <ProfilTool v-if="user" />
+            <ProfileTool v-if="user" />
             <div v-else class="hidden tablet:flex gap-2">
               <NuxtLink
                 :to="{ name: 'Login' }"
