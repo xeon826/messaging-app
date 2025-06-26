@@ -43,7 +43,7 @@ const signWithGoogle = async () => {
   const { error, } = await auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: window.location.origin + "/app/profile",
+      redirectTo: window.location.origin + "/messenger",
     },
   });
   if (error) console.log(error);
@@ -53,7 +53,7 @@ const signWithGithub = async () => {
   const { error } = await auth.signInWithOAuth({
     provider: "github",
     options: {
-      redirectTo: window.location.origin + "/app/profile",
+      redirectTo: window.location.origin + "/messenger",
     },
   });
   if (error) console.log(error);
@@ -63,11 +63,7 @@ const signWithGithub = async () => {
 <template>
   <div class="flex min-h-full flex-col justify-center py-12 px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
-      <img
-        class="mx-auto h-12 w-auto"
-        src="../assets/media/logo.svg"
-        alt="Your Company"
-      />
+
       <h2
         class="mt-6 text-center text-3xl font-bold tracking-tight text-primary"
       >
@@ -145,7 +141,7 @@ const signWithGithub = async () => {
       <NuxtLink :to="{ name: 'Login' }" class="btn-secondary mt-6">
         Already have an account ? Login here
       </NuxtLink>
-      <div class="mt-12">
+      <div class="mt-12 hidden">
         <div class="relative">
           <div class="absolute inset-0 flex items-center">
             <div class="w-full border-t border-sm border-muted" />

@@ -5,7 +5,7 @@
       <div class="flex items-center gap-4">
         <Logo :size="8" />
         <span class="text-muted text-sm text-center"
-        >© 2023,
+        >© 2025,
         <NuxtLink
           role="link"
           target="_blank"

@@ -22,7 +22,7 @@ console.log('Initial auth state:', { user: user.value, client });
 watchEffect(() => {
   console.log('watchEffect triggered, user:', user.value);
   if (user.value) {
-    navigateTo("/app/profile");
+    navigateTo("/messenger");
   }
 });
 
@@ -74,7 +74,7 @@ const signWithGithub = async () => {
     const { error: authError } = await client.auth.signInWithOAuth({
       provider: "github",
       options: {
-        redirectTo: `${window.location.origin}/app/profile`,
+        redirectTo: `${window.location.origin}/messenger`,
       },
     });
 
@@ -184,36 +184,36 @@ const signWithGoogle = async () => {
       <NuxtLink :to="{ name: 'Signup' }" class="block w-full btn-secondary mt-6 text-center">
         Don't have an account? Sign up
       </NuxtLink>
-      <div class="mt-12">
-        <div class="relative">
-          <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t border-sm border-muted" />
-          </div>
-          <div class="relative flex justify-center text-sm">
-            <span class="bg-primary px-2 text-muted">Or continue with</span>
-          </div>
-        </div>
-      </div>
-      <div class="mt-6 grid grid-cols-2 gap-3">
-        <button 
-          type="button" 
-          class="w-full btn-secondary" 
-          @click="signWithGoogle"
-          :disabled="loading"
-        >
-          <i class="fab fa-google mr-2"></i>
-          Google
-        </button>
-        <button 
-          type="button" 
-          class="w-full btn-secondary" 
-          @click="signWithGithub"
-          :disabled="loading"
-        >
-          <i class="fab fa-github mr-2"></i>
-          GitHub
-        </button>
-      </div>
+      <!-- <div class="mt-12"> -->
+      <!--   <div class="relative"> -->
+      <!--     <div class="absolute inset-0 flex items-center"> -->
+      <!--       <div class="w-full border-t border-sm border-muted" /> -->
+      <!--     </div> -->
+      <!--     <div class="relative flex justify-center text-sm"> -->
+      <!--       <span class="bg-primary px-2 text-muted">Or continue with</span> -->
+      <!--     </div> -->
+      <!--   </div> -->
+      <!-- </div> -->
+      <!-- <div class="mt-6 grid grid-cols-2 gap-3"> -->
+      <!--   <button  -->
+      <!--     type="button"  -->
+      <!--     class="w-full btn-secondary"  -->
+      <!--     @click="signWithGoogle" -->
+      <!--     :disabled="loading" -->
+      <!--   > -->
+      <!--     <i class="fab fa-google mr-2"></i> -->
+      <!--     Google -->
+      <!--   </button> -->
+      <!--   <button  -->
+      <!--     type="button"  -->
+      <!--     class="w-full btn-secondary"  -->
+      <!--     @click="signWithGithub" -->
+      <!--     :disabled="loading" -->
+      <!--   > -->
+      <!--     <i class="fab fa-github mr-2"></i> -->
+      <!--     GitHub -->
+      <!--   </button> -->
+      <!-- </div> -->
     </div>
   </div>
 </template>
