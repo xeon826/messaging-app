@@ -1,13 +1,17 @@
 <script lang="ts" setup>
+
 definePageMeta({
   title: 'Messenger',
   name: 'Messenger',
   path: '/messenger',
+  // Add middleware to ensure authentication
+  middleware: ['auth']
 });
 
 const toastStore = useToastStore();
 const isLoading = ref(true);
 const userData = ref(null);
+const user = useSupabaseUser();
 
 const demandTypes = [
   {
@@ -37,45 +41,64 @@ const demandTypes = [
 ];
 const selected = ref(demandTypes[0]);
 const message = ref('');
-
-// Move users data to be populated from API
 const users = ref([]);
 
-async function submitForm() {
-  toastStore.showSuccessToast({
-    title: 'contact.success',
-  });
-}
-
-// Modified to initialize data
+// Modified to include better error handling and debugging
 const loadUsers = async () => {
+  console.log('Loading users, current auth state:', { user: user.value });
+  
   try {
+    isLoading.value = true;
     const response = await useListUsers();
-    // Since response is already a ref, we can assign it directly to users
+    console.log('User data response:', response.value);
+    
+    if (!response.value) {
+      throw new Error('No data received from useListUsers');
+    }
+    
     users.value = response.value;
     userData.value = response.value;
   } catch (error) {
     console.error('Error fetching user data:', error);
     toastStore.showErrorToast({
       title: 'Error',
-      message: 'Failed to load user data'
+      message: 'Failed to load user data. Please try again.'
     });
+    // Initialize with empty array to prevent undefined errors
+    users.value = [];
   } finally {
     isLoading.value = false;
   }
 };
 
-// Call whoAmI immediately when component mounts
-onMounted(() => {
-  loadUsers();
+// Add watch effect to reload data when auth state changes
+watchEffect(() => {
+  if (user.value) {
+    console.log('Auth state changed, reloading users');
+    loadUsers();
+  }
 });
+
+// Modified to handle both initial load and subsequent refreshes
+onMounted(() => {
+  console.log('Component mounted, checking auth state');
+  if (user.value) {
+    loadUsers();
+  }
+});
+
+async function submitForm() {
+  toastStore.showSuccessToast({
+    title: 'contact.success',
+  });
+}
 </script>
 
 <template>
   <div
     class="relative h-full flex flex-col gap-4 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 lg:py-16"
   >
-    <!-- grid -->
+    <!-- grid background -->
     <div
       class="pointer-events-none absolute inset-0 bg-center bg-grid-black/10 dark:bg-grid-white/5 bg-grid-14 [mask-image:radial-gradient(white,transparent_80%)]"
     ></div>
@@ -89,6 +112,17 @@ onMounted(() => {
       <div v-if="isLoading" class="text-center py-8">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
         <p class="mt-4">{{ $t('messenger.loading') }}</p>
+      </div>
+
+      <!-- Error state -->
+      <div v-else-if="!users.length" class="text-center py-8">
+        <p class="text-gray-500">{{ $t('messenger.no_users') }}</p>
+        <button 
+          @click="loadUsers" 
+          class="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
+        >
+          {{ $t('messenger.retry') }}
+        </button>
       </div>
 
       <!-- Content - only shown after data is loaded -->
