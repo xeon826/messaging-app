@@ -43,16 +43,17 @@ export default eventHandler(async (event) => {
     if (error) {
       throw error;
     }
+    console.log('fetched users', fetchedUsers)
 
-    // Transform the data to match your expected format
+    // Transform the data to match the frontend property names
     const transformedUsers = fetchedUsers.map(user => ({
-      firstName: user.user_metadata?.firstName || '',
-      lastName: user.user_metadata?.lastName || '',
-      username: user.user_metadata?.username || '',
+      firstName: user.user_metadata?.full_name?.split(' ')[0] || '',
+      lastName: user.user_metadata?.full_name?.split(' ')[1] || '',
+      username: user.user_metadata?.user_name || '',
       email: user.email,
     }));
 
-    return { users: transformedUsers };
+    return transformedUsers; // Return the array directly
   } catch (error) {
     console.error('Error fetching users:', error);
     throw createError({

@@ -57,6 +57,7 @@ const loadUsers = async () => {
       throw new Error('No data received from useListUsers');
     }
     
+    // Store the users directly since we're now returning the array
     users.value = response.value;
     userData.value = response.value;
   } catch (error) {
@@ -65,7 +66,6 @@ const loadUsers = async () => {
       title: 'Error',
       message: 'Failed to load user data. Please try again.'
     });
-    // Initialize with empty array to prevent undefined errors
     users.value = [];
   } finally {
     isLoading.value = false;
