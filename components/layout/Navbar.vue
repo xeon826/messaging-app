@@ -28,18 +28,9 @@ const user = useSupabaseUser();
           class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start"
         >
           <div class="flex flex-shrink-0 items-center">
-            <img
-              class="block h-6 w-auto lg:hidden"
-              src="../assets/media/logo.svg"
-              alt="Messaging App"
-            />
-            <img
-              class="hidden h-6 w-auto lg:block"
-              src="../assets/media/logo.svg"
-              alt="Messaging App"
-            />
+
             <span class="text-md font-bold text-primary ml-2"
-              >Nuxt3 Starter</span
+              >Messaging App</span
             >
           </div>
           <div class="hidden sm:ml-6 sm:block">
@@ -51,7 +42,7 @@ const user = useSupabaseUser();
                 class="text-primary font-medium transition duration-300 ease-in-out"
                 :class="[
                   item.name === $route.name
-                    ? 'bg-accent-faded text-accent hover:text-muted'
+                    ? 'bg-accent-faded text-primary hover:text-muted'
                     : 'text-primary hover:text-muted',
                   'px-4 py-1 rounded-md text-sm font-medium',
                 ]"

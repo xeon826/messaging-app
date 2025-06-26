@@ -8,7 +8,8 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const client = serverSupabaseClient(event);
+    // Add await here
+    const client = await serverSupabaseClient(event);
     const user = await serverSupabaseUser(event);
     
     // If no user is found, just return without throwing an error

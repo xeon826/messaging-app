@@ -5,7 +5,8 @@ definePageMeta({
   name: 'Messenger',
   path: '/messenger',
   // Add middleware to ensure authentication
-  middleware: ['auth']
+  middleware: ['auth'],
+  layout: 'default'
 });
 
 const toastStore = useToastStore();

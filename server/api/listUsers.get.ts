@@ -1,4 +1,4 @@
-
+import { serverSupabaseClient, serverSupabaseServiceRole } from "#supabase/server";
 // Sample data for the table
 const users = [
   {
@@ -27,12 +27,37 @@ const users = [
   },
 ];
 
+export default eventHandler(async (event) => {
+  try {
+    // Use the service role client to access auth.users
+    const adminClient = await serverSupabaseServiceRole(event);
+    
+    // Add error handling for the client
+    if (!adminClient) {
+      throw new Error('Failed to initialize Supabase admin client');
+    }
 
-import { ContactEmail } from "~/types/ContactEmail";
-import { Resend } from "resend";
-import { H3Event } from "h3";
+    // Note: We use supabase.auth.admin.listUsers() instead of querying the table directly
+    const { data: { users: fetchedUsers }, error } = await adminClient.auth.admin.listUsers();
 
+    if (error) {
+      throw error;
+    }
 
-export default defineEventHandler(async (event: H3Event) => {
-  return users;
+    // Transform the data to match your expected format
+    const transformedUsers = fetchedUsers.map(user => ({
+      firstName: user.user_metadata?.firstName || '',
+      lastName: user.user_metadata?.lastName || '',
+      username: user.user_metadata?.username || '',
+      email: user.email,
+    }));
+
+    return { users: transformedUsers };
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw createError({
+      statusCode: 500,
+      message: 'Failed to fetch users'
+    });
+  }
 });
