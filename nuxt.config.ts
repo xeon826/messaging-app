@@ -76,7 +76,7 @@ export default defineNuxtConfig({
   },
 
   image: {
-    format: ["webp"],
+    dir: "assets"
   },
 
   nitro: {
