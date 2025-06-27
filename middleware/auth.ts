@@ -5,6 +5,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   try {
     // Get the current session
     const { data: { session }, error } = await auth.getSession()
+    console.log('data', data)
 
     // If there's no session and we're not already on the login page, redirect to login
     if (!session && to.path !== '/login') {
