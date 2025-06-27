@@ -18,11 +18,11 @@
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.2.0",
     "@nuxt/devtools": "latest",
-    "@nuxtjs/supabase": "^1.5.2",
-    "@nuxthq/ui": "^2.7.0",
     "@nuxt/image": "^1.10.0",
+    "@nuxthq/ui": "^2.7.0",
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@nuxtjs/i18n": "next",
+    "@nuxtjs/supabase": "^1.5.2",
     "@pinia/nuxt": "^0.5.1",
     "@types/bun": "^1.2.17",
     "@vercel/analytics": "^1.5.0",
@@ -32,6 +32,8 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
     "eslint-plugin-vue": "^10.2.0",
+    "nitropack": "^2.11.13",
+    "nuxi": "^3.25.1",
     "nuxt": "^3.17.5",
     "nuxt-headlessui": "^1.2.0",
     "nuxt-svgo": "^4.2.2",
@@ -40,9 +42,7 @@
     "prettier": "^3.6.1",
     "resend": "^4.6.0",
     "sass": "^1.89.2",
-    "sitemap": "^8.0.0",
-    "nitropack": "^2.11.13",
-    "nuxi": "^3.25.1"
+    "sitemap": "^8.0.0"
   },
   "dependencies": {
     "@types/ws": "^8.18.1",
