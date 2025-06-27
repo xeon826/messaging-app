@@ -41,16 +41,16 @@ export default defineNuxtConfig({
 
   supabase: {
     redirectOptions: {
-      login: '/login',
-      callback: '/confirm',
-      exclude: ['/', '/signup'],
+      login: "/login",
+      callback: "/confirm",
+      exclude: ["/", "/signup"],
     },
   },
 
   colorMode: {
-    preference: 'system',
-    fallback: 'dark',
-    storageKey: 'nuxt-starter-color-mode',
+    preference: "system",
+    fallback: "dark",
+    storageKey: "nuxt-starter-color-mode",
   },
 
   i18n: {
@@ -59,19 +59,19 @@ export default defineNuxtConfig({
       alwaysRedirect: true,
       useCookie: true,
       cookieKey: "i18n_redirected",
-      redirectOn: 'root',
+      redirectOn: "root",
     },
     locales: [
       {
-        code: 'en',
-        iso: 'en-US'
+        code: "en",
+        iso: "en-US",
       },
       {
-        code: 'fr',
-        iso: 'fr-FR'
-      }
+        code: "fr",
+        iso: "fr-FR",
+      },
     ],
-    baseUrl: 'http://localhost:3000',
+    baseUrl: "http://localhost:3000",
     vueI18n: "~/i18n.config.ts",
   },
 
@@ -80,12 +80,25 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    experimental: {
+      websocket: true,
+      tasks: true,
+      database: true,
+    },
     prerender: {
       crawlLinks: true,
       routes: ["/sitemap.xml"],
     },
   },
-
+  $production: {
+    nitro: {
+      database: {
+        default: {
+          connector: "bun",
+        },
+      },
+    },
+  },
   svgo: {
     autoImportPath: "./assets/logo/",
   },
