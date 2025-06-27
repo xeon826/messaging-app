@@ -9,6 +9,8 @@
 </template>
 
 <style scoped lang="scss">
+@use "sass:map";
+
 $circle-sizes: (
   "lg": 24rem,
   "md": 18rem,
@@ -16,7 +18,7 @@ $circle-sizes: (
 );
 
 @mixin circle($size) {
-  $circle-size: map-get($circle-sizes, $size);
+  $circle-size: map.get($circle-sizes, $size);
 
   width: $circle-size;
   height: $circle-size;
@@ -52,8 +54,10 @@ $circle-sizes: (
     background: linear-gradient(rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0) 64.93%);
 
     &::before {
-      background: linear-gradient(rgba(0, 0, 0, 0.06) 0%, rgba(0, 0, 0, 0) 50%), linear-gradient(rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0) 10%);
-      -webkit-mask: linear-gradient(rgb(0, 0, 0) 0px, rgb(0, 0, 0) 0px) content-box content-box, linear-gradient(rgb(0, 0, 0) 0px, rgb(0, 0, 0) 0px);
+      background: linear-gradient(rgba(0, 0, 0, 0.06) 0%, rgba(0, 0, 0, 0) 50%), 
+                 linear-gradient(rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0) 10%);
+      -webkit-mask: linear-gradient(rgb(0, 0, 0) 0px, rgb(0, 0, 0) 0px) content-box content-box, 
+                   linear-gradient(rgb(0, 0, 0) 0px, rgb(0, 0, 0) 0px);
       -webkit-mask-composite: xor;
     }
   }
