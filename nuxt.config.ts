@@ -29,14 +29,14 @@ export default defineNuxtConfig({
   },
 
   modules: [
+    "@nuxtjs/supabase", 
+    "@pinia/nuxt",
+    "@nuxtjs/i18n",
     "nuxt-headlessui",
     "@vueuse/nuxt",
-    "@nuxtjs/i18n",
-    "@pinia/nuxt",
     "@nuxthq/ui",
     "nuxt-svgo",
     "@nuxt/image",
-    "@nuxtjs/supabase",
   ],
 
   supabase: {
@@ -106,4 +106,26 @@ export default defineNuxtConfig({
   },
 
   plugins: [{ src: "~/plugins/vercel.ts", mode: "client" }],
+
+  build: {
+    transpile: [
+      '@headlessui/vue',
+      'vue',
+      '@vue/runtime-core'
+    ]
+  },
+
+  vite: {
+    optimizeDeps: {
+      include: [
+        '@headlessui/vue',
+        'vue',
+        '@vue/runtime-core'
+      ],
+      exclude: ['vue-demi']
+    },
+    resolve: {
+      dedupe: ['vue']
+    }
+  },
 });

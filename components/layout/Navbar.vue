@@ -2,8 +2,28 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 
 const navigation = getNavigation('home');
-
 const user = useSupabaseUser();
+
+// Add error handling for user state
+const userState = computed(() => {
+  try {
+    return user.value
+  } catch (e) {
+    console.error('Error accessing user state:', e);
+    return null;
+  }
+});
+
+// Debug
+console.log('User state computed:', userState.value);
+
+// Add this to debug
+console.log('Current user state:', user.value);
+
+// Add a watcher to see when it changes
+watch(user, (newValue) => {
+  console.log('User state changed:', newValue);
+}, { immediate: true });
 </script>
 
 <template>
@@ -60,7 +80,12 @@ const user = useSupabaseUser();
             class="hidden tablet:block h-6 w-px bg-accent-faded border-l border-gray-200 border-opacity-25"
           ></div>
           <client-only>
-            <ProfileTool v-if="user" />
+            <template #fallback>
+              <div>Loading...</div>
+            </template>
+            <div v-if="userState">
+              <ProfileTool />
+            </div>
             <div v-else class="hidden tablet:flex gap-2">
               <NuxtLink
                 :to="{ name: 'Login' }"
@@ -100,7 +125,7 @@ const user = useSupabaseUser();
       <client-only>
         <div
           class="py-5 border-t border-gray-800 items-center text-center"
-          v-if="!user"
+          v-if="!userState"
         >
           <NuxtLink
             :to="{ name: 'Login' }"

@@ -2,10 +2,16 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const user = useSupabaseUser()
   const { auth } = useSupabaseClient()
 
+  console.log('Current user state:', user.value);
+
+  watch(user, (newValue) => {
+    console.log('User state changed:', newValue);
+  }, { immediate: true });
+
   try {
     // Get the current session
     const { data: { session }, error } = await auth.getSession()
-    console.log('data', data)
+    console.log('Session data:', session)
 
     // If there's no session and we're not already on the login page, redirect to login
     if (!session && to.path !== '/login') {
