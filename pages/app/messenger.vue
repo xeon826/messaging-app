@@ -3,7 +3,6 @@
 definePageMeta({
   title: 'Messenger',
   name: 'Messenger',
-  path: '/messenger',
   // Add middleware to ensure authentication
   middleware: ['auth'],
   layout: 'default'
@@ -13,34 +12,6 @@ const toastStore = useToastStore();
 const isLoading = ref(true);
 const userData = ref(null);
 const user = useSupabaseUser();
-
-const demandTypes = [
-  {
-    label: 'contact.subject_types.project',
-    value: 'project',
-    color: 'bg-blue-500',
-    button_color: 'blue',
-  },
-  {
-    label: 'contact.subject_types.question',
-    value: 'question',
-    color: 'bg-yellow-500',
-    button_color: 'yellow',
-  },
-  {
-    label: 'contact.subject_types.bug',
-    value: 'bug',
-    color: 'bg-red-500',
-    button_color: 'red',
-  },
-  {
-    label: 'contact.subject_types.other',
-    value: 'other',
-    color: 'bg-gray-500',
-    button_color: 'gray',
-  },
-];
-const selected = ref(demandTypes[0]);
 const message = ref('');
 const users = ref([]);
 
