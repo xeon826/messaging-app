@@ -1,3 +1,4 @@
+import { defineWebSocketHandler } from '#imports'
 import type { Peer } from "crossws";
 import { getQuery } from "ufo";
 

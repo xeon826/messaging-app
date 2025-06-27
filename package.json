@@ -23,19 +23,20 @@
     "@nuxt/image": "^1.10.0",
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@nuxtjs/i18n": "next",
-    "@pinia/nuxt": "^0.11.1",
+    "@pinia/nuxt": "^0.5.1",
     "@types/bun": "^1.2.17",
     "@vercel/analytics": "^1.5.0",
     "@vueuse/core": "^13.4.0",
     "@vueuse/nuxt": "^13.4.0",
-    "nuxt-svgo": "^4.2.2",
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
     "eslint-plugin-vue": "^10.2.0",
     "nuxt": "^3.17.5",
     "nuxt-headlessui": "^1.2.0",
+    "nuxt-svgo": "^4.2.2",
     "openai": "^5.8.1",
+    "pinia": "^2.1.7",
     "prettier": "^3.6.1",
     "resend": "^4.6.0",
     "sass": "^1.89.2",
@@ -43,5 +44,10 @@
     "nitropack": "^2.11.13",
     "nuxi": "^3.25.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@types/ws": "^8.18.1",
+    "crossws": "^0.4.1",
+    "h3": "^1.15.3",
+    "ws": "^8.18.2"
+  }
 }

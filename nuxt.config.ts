@@ -29,10 +29,10 @@ export default defineNuxtConfig({
   },
 
   modules: [
+    "@pinia/nuxt",
     "nuxt-headlessui",
     "@vueuse/nuxt",
     "@nuxtjs/i18n",
-    "@pinia/nuxt",
     "@nuxthq/ui",
     "nuxt-svgo",
     "@nuxt/image",
@@ -103,5 +103,7 @@ export default defineNuxtConfig({
     autoImportPath: "./assets/logo/",
   },
 
-  plugins: [{ src: "~/plugins/vercel.ts", mode: "client" }],
+  plugins: [
+    { src: "~/plugins/vercel.ts", mode: "client" }
+  ],
 });

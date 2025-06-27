@@ -2,7 +2,6 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 
 const navigation = getNavigation('home');
-
 const user = useSupabaseUser();
 </script>
 
