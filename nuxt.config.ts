@@ -22,6 +22,10 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
 
+  devServer: {
+    port: 3000
+  },
+
   runtimeConfig: {
     private: {
       resendApiKey: process.env.RESEND_API_KEY,

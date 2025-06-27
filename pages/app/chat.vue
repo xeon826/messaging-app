@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { generateName } from '~/utils/string';
 definePageMeta({
   title: 'Chat',
   name: 'Chat',
@@ -12,6 +13,7 @@ const message = ref<string>("");
 const messages = useState<{ id: number, user: string, message: string, created_at: string }[]>(() => []);
 
 const userId = useCookie<string>("userId")
+
 if (!userId.value) {
   userId.value = generateName()
 }

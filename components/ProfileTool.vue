@@ -1,14 +1,22 @@
-
 <script setup lang="ts">
 import { MenuButton, Menu, MenuItems } from "@headlessui/vue";
 
 const navigation = getNavigation("home");
-
 const user = useSupabaseUser();
 
-const profile = computed(() => user.value?.user_metadata.avatar_url);
-
-const default_avatar = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80";
+// Function to get user initials from email or name
+const userInitials = computed(() => {
+  const metadata = user.value?.user_metadata;
+  // Try to get name first, fallback to email
+  const displayName = metadata?.full_name || user.value?.email || '';
+  
+  // Get initials (up to 2 characters)
+  return displayName
+    .split(/\s+/)  // Split by whitespace
+    .map(word => word.charAt(0).toUpperCase())  // Get first char of each word
+    .slice(0, 2)   // Take first two
+    .join('');     // Join them together
+});
 
 const logout = async () => {
   await useLogout();
@@ -19,14 +27,10 @@ const logout = async () => {
   <Menu as="div" class="relative ml-3">
     <div>
       <MenuButton
-        class="flex rounded-full bg-gray-800 text-sm focus:outline-none"
+        class="flex rounded-full bg-blue-600 text-sm focus:outline-none h-8 w-8 items-center justify-center"
       >
         <span class="sr-only">Open user menu</span>
-        <img
-          class="h-8 w-8 rounded-full"
-          :src="profile || default_avatar"
-          alt=""
-        />
+        <span class="text-white font-medium">{{ userInitials }}</span>
       </MenuButton>
     </div>
     <transition
