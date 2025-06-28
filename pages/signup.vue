@@ -19,7 +19,7 @@ const loading = ref(false);
 
 watchEffect(async () => {
   if (user.value) {
-    await navigateTo("/messenger");
+    await navigateTo("/app/messenger");
   }
 });
 
