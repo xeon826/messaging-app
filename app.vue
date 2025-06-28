@@ -36,14 +36,14 @@ const toast = computed(() => {
 });
 
 useHead({
-  title: "Nuxt Starter - Start your next Nuxt project in seconds",
+  title: "Messaging App - Message your friends!",
   meta: [
     { name: "viewport", content: "width=device-width, initial-scale=1" },
     { name: "author", content: "Joshua Wilkeson" },
     { charset: "utf-8" },
     {
       name: "description",
-      content: "Start your next Nuxt project in seconds, with everything you need included",
+      content: "Message your friends!",
     },
     {
       name: "keywords",
@@ -51,11 +51,11 @@ useHead({
     },
     {
       property: "og:title",
-      content: "Nuxt Starter - Start your next Nuxt project in seconds",
+      content: "Messaging App - Message your friends!",
     },
     {
       property: "og:url",
-      content: "https://nuxtstarter.hrcd.fr/",
+      content: "https://thejoshuatree.io/img/tree--white-blue-logo.webp",
     },
     {
       property: "og:description",
@@ -63,7 +63,7 @@ useHead({
     },
     {
       property: "og:image",
-      content: "https://nuxtstarter.hrcd.fr/homescreen.png",
+      content: "https://thejoshuatree.io/img/tree--white-blue-logo.webp",
     },
     {
       property: "twitter:card",
@@ -71,19 +71,19 @@ useHead({
     },
     {
       property: "twitter:image",
-      content: "https://nuxtstarter.hrcd.fr/homescreen.png",
+      content: "https://thejoshuatree.io/img/tree--white-blue-logo.webp",
     },
     {
       property: "twitter:url",
-      content: "https://nuxtstarter.hrcd.fr/",
+      content: "https://thejoshuatree.io/img/tree--white-blue-logo.webp",
     },
     {
       property: "twitter:title",
-      content: "Nuxt Starter - Start your next Nuxt project in seconds",
+      content: "Messaging App - Message your friends",
     },
     {
       property: "twitter:description",
-      content: "Start your next Nuxt project in seconds, with everything you need included",
+      content: "Message your friends!",
     },
   ],
 });

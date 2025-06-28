@@ -1,6 +1,6 @@
 export default defineAppConfig({
-  appName: "Nuxt Starter",
-  appDescription: "Nuxt Starter is a starter template for Nuxt3",
+  appName: "Messaging App",
+  appDescription: "Messaging App is a way to message your friends!",
   appVersion: "1.0.0",
   ui: {
     primary: "orange",
