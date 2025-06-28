@@ -61,7 +61,7 @@ const signWithGoogle = async () => {
   const { error, } = await auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: window.location.origin + "/messenger",
+      redirectTo: window.location.origin + "/app/messenger",
     },
   });
   if (error) console.log(error);
@@ -71,7 +71,7 @@ const signWithGithub = async () => {
   const { error } = await auth.signInWithOAuth({
     provider: "github",
     options: {
-      redirectTo: window.location.origin + "/messenger",
+      redirectTo: window.location.origin + "/app/messenger",
     },
   });
   if (error) console.log(error);
