@@ -24,26 +24,44 @@ watchEffect(async () => {
 });
 
 const signup = async () => {
-  loading.value = true;
-  const { error } = await auth.signUp({
-    email: email.value,
-    password: password.value,
-    options: {
-      data: {
-        user_name: username.value,
-        full_name: firstname.value + " " + lastname.value,
+  try {
+    loading.value = true;
+    
+    // Validate passwords match
+    if (password.value !== passwordConfirm.value) {
+      throw new Error("Passwords do not match");
+    }
+
+    const { error, data } = await auth.signUp({
+      email: email.value,
+      password: password.value,
+      options: {
+        data: {
+          user_name: username.value,
+          full_name: firstname.value + " " + lastname.value,
+        },
       },
-    },
-  });
-  if (error) console.log(error);
-  loading.value = false;
+    });
+
+    if (error) throw error;
+
+    // If signup successful, redirect to messenger
+    if (data?.user) {
+      await navigateTo("/app/messenger");
+    }
+  } catch (error) {
+    console.error("Signup error:", error);
+    // Here you might want to add a toast or alert to show the error to the user
+  } finally {
+    loading.value = false;
+  }
 };
 
 const signWithGoogle = async () => {
   const { error, } = await auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: window.location.origin + "/app/messenger",
+      redirectTo: window.location.origin + "/messenger",
     },
   });
   if (error) console.log(error);
@@ -53,7 +71,7 @@ const signWithGithub = async () => {
   const { error } = await auth.signInWithOAuth({
     provider: "github",
     options: {
-      redirectTo: window.location.origin + "/app/messenger",
+      redirectTo: window.location.origin + "/messenger",
     },
   });
   if (error) console.log(error);
