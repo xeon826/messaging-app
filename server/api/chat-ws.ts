@@ -56,7 +56,7 @@ export default defineWebSocketHandler({
     };
 
     // Store message in database
-    await addMessage(userId, message.text());
+    await addMessage(userId, '1', message.text());
 
     // Broadcast the message to all connected peers
     broadcastMessage(messageObj);
@@ -119,8 +119,5 @@ function getStats() {
   return { online, total: users.size };
 }
 
-async function addMessage(userId: string, message: string) {
-  // Store message in database
-  // This function is not implemented in the original code
-  // You should implement it according to your database schema
-}
+// async function addMessage(userId: string, message: string) {
+// }

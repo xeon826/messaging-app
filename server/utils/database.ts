@@ -4,15 +4,26 @@ import crypto from 'crypto';
 const prisma = new PrismaClient();
 
 export async function addMessage(
-  user: string,
+  userId: string,
+  chatId: string,
   message: string,
-  receiverId?: string,
 ) {
   return prisma.message.create({
     data: {
-      user,
       message,
+      userId,
+      chatId,
     },
+    include: {
+      sender: {
+        select: {
+          id: true,
+          username: true,
+          firstName: true,
+          lastName: true,
+        }
+      }
+    }
   });
 }
 
@@ -58,35 +69,58 @@ export async function createOrFindChat(users: [string, string]) {
   });
 }
 
+// export async function getMessages(
+//   userId?: string,
+//   count = 25,
+// ) {
+//   if (userId) {
+//     // Get private messages between two users
+//     return prisma.message.findMany({
+//       where: {
+//         OR: [
+//           { AND: [{ user: userId }, { receiverId: { not: null } }] },
+//           { AND: [{ user: { not: userId } }, { receiverId: userId }] },
+//         ],
+//       },
+//       orderBy: {
+//         createdAt: "asc",
+//       },
+//       take: count,
+//     });
+//   }
+
+//   // Get public messages
+//   return prisma.message.findMany({
+//     where: {
+//       receiverId: null,
+//     },
+//     orderBy: {
+//       createdAt: "asc",
+//     },
+//     take: count,
+//   });
+// }
+
 export async function getMessages(
-  userId?: string,
-  receiverId?: string,
+  // chatId: string,
   count = 25,
 ) {
-  if (userId && receiverId) {
-    // Get private messages between two users
-    return prisma.message.findMany({
-      where: {
-        OR: [
-          { AND: [{ user: userId }, { receiverId }] },
-          { AND: [{ user: receiverId }, { receiverId: userId }] },
-        ],
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-      take: count,
-    });
-  }
-
-  // Get public messages
   return prisma.message.findMany({
-    where: {
-      receiverId: null,
-    },
+    // where: {
+    //   chatId: chatId,
+    // },
     orderBy: {
       createdAt: "asc",
     },
     take: count,
+    // include: {
+    //   sender: {
+    //     select: {
+    //       id: true,
+    //       name: true,
+    //       avatar: true,
+    //     }
+    //   }
+    // }
   });
 }
