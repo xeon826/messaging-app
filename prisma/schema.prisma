@@ -28,7 +28,28 @@ model User {
   lastName         String    @map("last_name")
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
+  chats           ChatUser[]
 
   @@map("users")
+}
+
+model Chats {
+  id               String    @id
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  users     ChatUser[]
+
+  @@map("chats")
+}
+
+model ChatUser {
+  chatId    String   @map("chat_id")
+  userId    String   @map("user_id")
+  chat      Chats    @relation(fields: [chatId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  joinedAt  DateTime @default(now()) @map("joined_at")
+
+  @@id([chatId, userId])
+  @@map("chat_users")
 }
 
