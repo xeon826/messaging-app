@@ -11,11 +11,11 @@ generator client {
 model Message {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now()) @map("created_at")
-  user       String
   message    String
-  receiverId String?  @map("receiver_id")
-  receiver   User?    @relation("ReceivedMessages", fields: [receiverId], references: [id])
-  sender     User?    @relation("SentMessages", fields: [user], references: [id])
+  userId     String   @map("user_id") // Add this field for the foreign key
+  sender     User?    @relation("SentMessages", fields: [userId], references: [id])
+  chatId     String   @map("chat_id") // Add chat relationship
+  chat       Chats    @relation(fields: [chatId], references: [id])
 
   @@map("messages")
 }
@@ -27,17 +27,17 @@ model User {
   firstName        String    @map("first_name")
   lastName         String    @map("last_name")
   sentMessages     Message[] @relation("SentMessages")
-  receivedMessages Message[] @relation("ReceivedMessages")
   chats           ChatUser[]
 
   @@map("users")
 }
 
 model Chats {
-  id               String    @id
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id        String    @id
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
   users     ChatUser[]
+  messages  Message[] // Add this field for the reverse relation
 
   @@map("chats")
 }
