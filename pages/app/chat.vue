@@ -173,12 +173,6 @@ useServerHead({
             <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg flex-1" @click="send">
               Send
             </button>
-            <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg flex-1" @click="ping">
-              Ping
-            </button>
-            <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg flex-1" @click="connect">
-              Reconnect
-            </button>
             <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg flex-1" @click="clear">
               Clear
             </button>
