@@ -14,6 +14,7 @@ const userData = ref(null);
 const user = useSupabaseUser();
 const message = ref('');
 const users = ref([]);
+const router = useRouter();
 
 // Modified to include better error handling and debugging
 const loadUsers = async () => {
@@ -64,6 +65,17 @@ async function submitForm() {
     title: 'contact.success',
   });
 }
+
+const navigateToChat = (user: any) => {
+  // Navigate to chat with the selected user's ID
+  router.push({
+    path: '/app/chat',
+    query: { 
+      receiverId: user.username // Using username as the receiver ID
+    }
+  });
+};
+
 </script>
 
 <template>
@@ -121,6 +133,7 @@ async function submitForm() {
                 v-for="user in users"
                 :key="user.email"
                 class="hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer"
+                @click="navigateToChat(user)"
               >
                 <td class="px-6 py-4 text-sm">{{ user.firstName }}</td>
                 <td class="px-6 py-4 text-sm">{{ user.lastName }}</td>

@@ -15,7 +15,6 @@ const messages = useState<{ id: number, user: string, message: string, created_a
 const userId = useCookie<string>("userId")
 
 const user = useSupabaseUser();
-console.log('the user', user)
 const userInitials = computed(() => {
   const metadata = user.value?.user_metadata;
   // Try to get name first, fallback to email
