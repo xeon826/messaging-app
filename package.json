@@ -45,10 +45,12 @@
     "sitemap": "^8.0.0"
   },
   "dependencies": {
+    "@prisma/client": "^6.10.1",
     "@types/ws": "^8.18.1",
     "cookie-es": "^2.0.0",
     "crossws": "^0.4.1",
     "h3": "^1.15.3",
+    "prisma": "^6.10.1",
     "ws": "^8.18.2"
   }
 }

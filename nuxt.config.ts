@@ -108,6 +108,7 @@ export default defineNuxtConfig({
   },
 
   plugins: [
-    { src: "~/plugins/vercel.ts", mode: "client" }
+    { src: "~/plugins/vercel.ts", mode: "client" },
+    { src: "~/plugins/prisma.ts" }
   ],
 });
