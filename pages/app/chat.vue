@@ -15,11 +15,11 @@ const messages = useState<{ id: number, user: string, message: string, created_a
 const userId = useCookie<string>("userId")
 
 const user = useSupabaseUser();
+console.log('the user', user)
 const userInitials = computed(() => {
   const metadata = user.value?.user_metadata;
   // Try to get name first, fallback to email
   const displayName = metadata?.full_name || user.value?.email || '';
-  console.log('the metadata', metadata)
   
   // Get initials (up to 2 characters)
   return displayName
@@ -29,9 +29,8 @@ const userInitials = computed(() => {
     .join('');     // Join them together
 });
 
-const displayName = computed(() => {
-  const metadata = user.value?.user_metadata;
-  return metadata?.full_name || user.value?.email || 'anonymous';
+const username = computed(() => {
+  return user.value?.user_metadata.user_name;
 });
 
 if (!userId.value) {
@@ -57,7 +56,7 @@ const log = (user: string, ...args: string[]) => {
 const connect = async () => {
   const isSecure = location.protocol === "https:";
   console.log('user initials', userInitials)
-  const url = (isSecure ? "wss://" : "ws://") + location.host + "/api/chat-ws?userId=" + encodeURIComponent(displayName.value);
+  const url = (isSecure ? "wss://" : "ws://") + location.host + "/api/chat-ws?userId=" + encodeURIComponent(username.value) + '&receiverId=' + 'thereceiverid';
   if (ws) {
     log("ws", "Closing previous connection before reconnecting...");
     ws.close();
