@@ -61,9 +61,20 @@ export default defineWebSocketHandler({
 });
 
 function getUserId(peer: Peer) {
-  const query = getQuery(peer.url);
-  return query.userId as string;
+  console.log('Peer URL:', peer.url); // Debug log
+  // The URL in the peer object might be just the path part
+  // We need to get the raw URL from the request
+  const url = peer.url || peer.request?.url || '';
+  console.log('URL being parsed:', url);
+  const query = getQuery(url);
+  console.log('Query params:', query); // Debug log
+  const userId = query.userId;
+  if (!userId) {
+    console.warn('No userId found in query parameters');
+  }
+  return userId as string;
 }
+
 
 function getStats() {
   const online = Array.from(users.values()).filter((u) => u.online).length;
