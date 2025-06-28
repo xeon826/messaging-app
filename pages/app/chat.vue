@@ -14,8 +14,28 @@ const messages = useState<{ id: number, user: string, message: string, created_a
 
 const userId = useCookie<string>("userId")
 
+const user = useSupabaseUser();
+const userInitials = computed(() => {
+  const metadata = user.value?.user_metadata;
+  // Try to get name first, fallback to email
+  const displayName = metadata?.full_name || user.value?.email || '';
+  console.log('the metadata', metadata)
+  
+  // Get initials (up to 2 characters)
+  return displayName
+    .split(/\s+/)  // Split by whitespace
+    .map(word => word.charAt(0).toUpperCase())  // Get first char of each word
+    .slice(0, 2)   // Take first two
+    .join('');     // Join them together
+});
+
+const displayName = computed(() => {
+  const metadata = user.value?.user_metadata;
+  return metadata?.full_name || user.value?.email || 'anonymous';
+});
+
 if (!userId.value) {
-  userId.value = generateName()
+  userId.value = generateName();
 }
 
 if (!messages.value.length) {
@@ -36,7 +56,8 @@ const log = (user: string, ...args: string[]) => {
 
 const connect = async () => {
   const isSecure = location.protocol === "https:";
-  const url = (isSecure ? "wss://" : "ws://") + location.host + "/api/chat-ws?userId=" + userId.value;
+  console.log('user initials', userInitials)
+  const url = (isSecure ? "wss://" : "ws://") + location.host + "/api/chat-ws?userId=" + encodeURIComponent(displayName.value);
   if (ws) {
     log("ws", "Closing previous connection before reconnecting...");
     ws.close();
@@ -67,7 +88,6 @@ const clear = () => {
 
 const scroll = () => {
   nextTick(() => {
-    console.log('scrooling')
     window.scrollTo(0, document.body.scrollHeight + 100);
   })
 }
