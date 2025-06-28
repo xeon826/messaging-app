@@ -2,13 +2,27 @@ import { defineWebSocketHandler } from '#imports'
 import type { Peer } from "crossws";
 import { getQuery } from "ufo";
 
+// Keep track of all connected peers
+const connectedPeers = new Set<Peer>();
 const users = new Map<string, { online: boolean }>();
 
 export default defineWebSocketHandler({
   open(peer) {
     console.log(`[ws] open ${peer}`);
-
+    
     const userId = getUserId(peer);
+    if (!userId) {
+      console.warn('User attempted to connect without userId');
+      peer.send({
+        user: "server",
+        message: "Error: No user ID provided",
+      });
+      peer.close();
+      return;
+    }
+
+    // Add peer to connected peers set
+    connectedPeers.add(peer);
     users.set(userId, { online: true });
 
     const stats = getStats();
@@ -17,27 +31,35 @@ export default defineWebSocketHandler({
       message: `Welcome to the server ${userId}! (Online users: ${stats.online}/${stats.total})`,
     });
 
+    // Subscribe to the chat channel
     peer.subscribe("chat");
-    peer.publish("chat", { user: "server", message: `${peer} joined!` });
+    
+    // Broadcast join message to all connected peers
+    broadcastMessage({
+      user: "server",
+      message: `${userId} joined!`
+    });
   },
+
   async message(peer, message) {
     console.log(`[ws] message ${peer} ${message.text()}`);
 
     const userId = getUserId(peer);
     if (message.text() === "ping") {
       peer.send({ user: "server", message: "pong" });
-      return
+      return;
     }
 
-    const _message = {
+    const messageObj = {
       user: userId,
       message: message.text(),
     };
-    peer.send(_message); // echo back
-    peer.publish("chat", _message);
 
     // Store message in database
     await addMessage(userId, message.text());
+
+    // Broadcast the message to all connected peers
+    broadcastMessage(messageObj);
   },
 
   close(peer, details) {
@@ -45,10 +67,20 @@ export default defineWebSocketHandler({
 
     const userId = getUserId(peer);
     users.set(userId, { online: false });
+    
+    // Remove peer from connected peers set
+    connectedPeers.delete(peer);
+
+    // Broadcast leave message
+    broadcastMessage({
+      user: "server",
+      message: `${userId} left!`
+    });
   },
 
   error(peer, error) {
     console.log(`[ws] error ${peer}`, error);
+    connectedPeers.delete(peer);
   },
 
   upgrade(req) {
@@ -59,6 +91,13 @@ export default defineWebSocketHandler({
     };
   },
 });
+
+// Helper function to broadcast message to all connected peers
+function broadcastMessage(message: any) {
+  for (const peer of connectedPeers) {
+    peer.send(message);
+  }
+}
 
 function getUserId(peer: Peer) {
   console.log('Peer URL:', peer.url); // Debug log
@@ -75,8 +114,13 @@ function getUserId(peer: Peer) {
   return userId as string;
 }
 
-
 function getStats() {
   const online = Array.from(users.values()).filter((u) => u.online).length;
   return { online, total: users.size };
+}
+
+async function addMessage(userId: string, message: string) {
+  // Store message in database
+  // This function is not implemented in the original code
+  // You should implement it according to your database schema
 }
