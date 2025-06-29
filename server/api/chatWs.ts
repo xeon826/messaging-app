@@ -1,6 +1,7 @@
 import { defineWebSocketHandler } from '#imports'
 import type { Peer } from "crossws";
 import { getQuery } from "ufo";
+import { createOrFindChat } from '#imports';
 
 // Keep track of all connected peers
 const connectedPeers = new Set<Peer>();
