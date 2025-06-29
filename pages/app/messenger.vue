@@ -135,8 +135,8 @@ const navigateToChat = (user: any) => {
                 class="hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer"
                 @click="navigateToChat(user)"
               >
-                <td class="px-6 py-4 text-sm">{{ user.firstName }}</td>
-                <td class="px-6 py-4 text-sm">{{ user.lastName }}</td>
+                <td class="px-6 py-4 text-sm">{{ user.first_name }}</td>
+                <td class="px-6 py-4 text-sm">{{ user.last_name }}</td>
                 <td class="px-6 py-4 text-sm">{{ user.username }}</td>
                 <td class="px-6 py-4 text-sm">{{ user.email }}</td>
               </tr>

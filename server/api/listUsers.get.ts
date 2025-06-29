@@ -1,33 +1,25 @@
-import { serverSupabaseClient, serverSupabaseServiceRole } from "#supabase/server";
-
+import { serverSupabaseClient } from "#supabase/server";
 
 export default eventHandler(async (event) => {
   try {
-    // Use the service role client to access auth.users
-    const adminClient = await serverSupabaseServiceRole(event);
+    // Use the regular client since we're accessing public schema
+    const client = await serverSupabaseClient(event);
     
-    // Add error handling for the client
-    if (!adminClient) {
-      throw new Error('Failed to initialize Supabase admin client');
+    if (!client) {
+      throw new Error('Failed to initialize Supabase client');
     }
 
-    // Note: We use supabase.auth.admin.listUsers() instead of querying the table directly
-    const { data: { users: fetchedUsers }, error } = await adminClient.auth.admin.listUsers();
+    // Query the public.users table
+    const { data: users, error } = await client
+      .from('users')
+      .select('first_name, last_name, username, email');
 
     if (error) {
       throw error;
     }
-    console.log('fetched users', fetchedUsers)
 
-    // Transform the data to match the frontend property names
-    const transformedUsers = fetchedUsers.map(user => ({
-      firstName: user.user_metadata?.full_name?.split(' ')[0] || '',
-      lastName: user.user_metadata?.full_name?.split(' ')[1] || '',
-      username: user.user_metadata?.user_name || '',
-      email: user.email,
-    }));
-
-    return transformedUsers; // Return the array directly
+    // Transform not needed since the data is already in the correct format
+    return users;
   } catch (error) {
     console.error('Error fetching users:', error);
     throw createError({
