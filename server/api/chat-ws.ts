@@ -41,11 +41,6 @@ export default defineWebSocketHandler({
     console.log(`[ws] message ${peer} ${message.text()}`);
 
     const userId = getUserId(peer);
-    if (message.text() === "ping") {
-      peer.send({ user: "server", message: "pong" });
-      return;
-    }
-
     const messageObj = {
       user: userId,
       message: message.text(),
@@ -54,11 +49,10 @@ export default defineWebSocketHandler({
     // Store message in database
     // await addMessage(userId, '1', message.text());
 
-    // Send message directly to sender
-    peer.send(messageObj);
     
     // Publish to all other subscribers
-    peer.publish("chat", messageObj.message);
+    broadcastMessage(messageObj)
+
   },
 
   close(peer, details) {
