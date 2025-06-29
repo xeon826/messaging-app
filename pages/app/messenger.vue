@@ -71,7 +71,7 @@ const navigateToChat = (user: any) => {
   router.push({
     path: '/app/chat',
     query: { 
-      receiverId: user.username // Using username as the receiver ID
+      receiverId: user.id // Using username as the receiver ID
     }
   });
 };

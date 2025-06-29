@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import crypto from 'crypto';
+import crypto from "crypto";
 
 const prisma = new PrismaClient();
 
@@ -21,13 +21,21 @@ export async function addMessage(
           username: true,
           firstName: true,
           lastName: true,
-        }
-      }
-    }
+        },
+      },
+    },
   });
 }
 
-export async function createOrFindChat(users: [string, string]) {
+export async function getUser(id: string) {
+  const user = await prisma.users.findUnique({
+    where: {
+      id: id,
+    },
+  });
+}
+
+export async function createOrFindChat(users: [string, string], title: string) {
   // Sort user IDs to ensure consistent ordering
   const [user1, user2] = users.sort();
 
@@ -37,14 +45,14 @@ export async function createOrFindChat(users: [string, string]) {
       users: {
         every: {
           userId: {
-            in: [user1, user2]
-          }
-        }
-      }
+            in: [user1, user2],
+          },
+        },
+      },
     },
     include: {
-      users: true
-    }
+      users: true,
+    },
   });
 
   if (existingChat) {
@@ -56,16 +64,17 @@ export async function createOrFindChat(users: [string, string]) {
   return prisma.chats.create({
     data: {
       id: chatId,
+      title: title,
       users: {
         create: [
           { userId: user1, joinedAt: new Date() },
-          { userId: user2, joinedAt: new Date() }
-        ]
-      }
+          { userId: user2, joinedAt: new Date() },
+        ],
+      },
     },
     include: {
-      users: true
-    }
+      users: true,
+    },
   });
 }
 
