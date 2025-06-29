@@ -33,12 +33,8 @@ export default defineWebSocketHandler({
 
     // Subscribe to the chat channel
     peer.subscribe("chat");
+    peer.publish("chat", { user: "server", message: `${peer} joined!` });
     
-    // Broadcast join message to all connected peers
-    broadcastMessage({
-      user: "server",
-      message: `${userId} joined!`
-    });
   },
 
   async message(peer, message) {
@@ -56,10 +52,13 @@ export default defineWebSocketHandler({
     };
 
     // Store message in database
-    await addMessage(userId, '1', message.text());
+    // await addMessage(userId, '1', message.text());
 
-    // Broadcast the message to all connected peers
-    broadcastMessage(messageObj);
+    // Send message directly to sender
+    peer.send(messageObj);
+    
+    // Publish to all other subscribers
+    peer.publish("chat", messageObj.message);
   },
 
   close(peer, details) {
