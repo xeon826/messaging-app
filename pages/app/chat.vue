@@ -50,8 +50,9 @@ if (!userId.value) {
 }
 
 if (!messages.value.length) {
-  const { data: result } = await useFetch('/api/messages');
-  console.log('returned data:', result.value.messages);
+  const { data: result } = await useFetch('/api/messages', {
+    params: { users: [user._value.id, receiverId] },
+  });
   const options = {
     year: 'numeric',
     month: 'numeric',
@@ -63,14 +64,15 @@ if (!messages.value.length) {
   };
   var messages_formatted = result.value.messages.map((msg) => {
     var date = new Date(msg.createdAt);
-    const formatted_date = new Intl.DateTimeFormat('en-US', options).format(date);
+    const formatted_date = new Intl.DateTimeFormat('en-US', options).format(
+      date,
+    );
     return {
       message: msg.message,
       user: msg.sender.username,
       created_at: formatted_date,
     };
   });
-  console.log('messages fixed', messages_formatted);
 
   // Directly access .value on messages when updating
   messages.value.push(...messages_formatted);

@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import crypto from "crypto";
+import { create } from "domain";
 
 const prisma = new PrismaClient();
 
@@ -78,11 +79,12 @@ export async function createOrFindChat(users: [string, string]) {
   });
 }
 
-export async function getMessages(chatId: string, count = 25) {
+export async function getMessages(users: [string, string], count = 25) {
+  var chat = await createOrFindChat(users)
   const result = prisma.message.findMany({
-    // where: {
-    //   chatId: chatId,
-    // },
+    where: {
+      chatId: chat.id
+    },
     orderBy: {
       createdAt: "asc",
     },
