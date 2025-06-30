@@ -78,38 +78,6 @@ export async function createOrFindChat(users: [string, string]) {
   });
 }
 
-// export async function getMessages(
-//   userId?: string,
-//   count = 25,
-// ) {
-//   if (userId) {
-//     // Get private messages between two users
-//     return prisma.message.findMany({
-//       where: {
-//         OR: [
-//           { AND: [{ user: userId }, { receiverId: { not: null } }] },
-//           { AND: [{ user: { not: userId } }, { receiverId: userId }] },
-//         ],
-//       },
-//       orderBy: {
-//         createdAt: "asc",
-//       },
-//       take: count,
-//     });
-//   }
-
-//   // Get public messages
-//   return prisma.message.findMany({
-//     where: {
-//       receiverId: null,
-//     },
-//     orderBy: {
-//       createdAt: "asc",
-//     },
-//     take: count,
-//   });
-// }
-
 export async function getMessages(chatId: string, count = 25) {
   const result = prisma.message.findMany({
     // where: {

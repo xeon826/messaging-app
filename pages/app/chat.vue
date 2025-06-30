@@ -61,19 +61,19 @@ if (!messages.value.length) {
     second: 'numeric',
     hour12: true, // Use 12-hour clock
   };
-  var messages_fixed = result.value.messages.map((msg) => {
+  var messages_formatted = result.value.messages.map((msg) => {
     var date = new Date(msg.createdAt);
-    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+    const formatted_date = new Intl.DateTimeFormat('en-US', options).format(date);
     return {
       message: msg.message,
       user: msg.sender.username,
-      created_at: formattedDate,
+      created_at: formatted_date,
     };
   });
-  console.log('messages fixed', messages_fixed);
+  console.log('messages fixed', messages_formatted);
 
   // Directly access .value on messages when updating
-  messages.value.push(...messages_fixed);
+  messages.value.push(...messages_formatted);
 }
 
 const log = (user: string, ...args: string[]) => {
