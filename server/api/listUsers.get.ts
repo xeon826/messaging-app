@@ -12,7 +12,7 @@ export default eventHandler(async (event) => {
     // Query the public.users table
     const { data: users, error } = await client
       .from('users')
-      .select('first_name, last_name, username, email');
+      .select('first_name, last_name, username, email, id');
 
     if (error) {
       throw error;
