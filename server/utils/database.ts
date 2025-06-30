@@ -119,15 +119,13 @@ export async function getMessages(chatId: string, count = 25) {
       createdAt: "asc",
     },
     take: count,
-    // include: {
-    //   sender: {
-    //     select: {
-    //       id: true,
-    //       name: true,
-    //       avatar: true,
-    //     }
-    //   }
-    // }
+    include: {
+      sender: {
+        select: {
+          username: true,
+        }
+      }
+    }
   });
   console.log('messages', result)
   return result;
