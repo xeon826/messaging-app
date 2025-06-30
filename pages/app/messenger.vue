@@ -15,6 +15,7 @@ const user = useSupabaseUser();
 const message = ref('');
 const users = ref([]);
 const router = useRouter();
+const route = useRoute();
 
 // Modified to include better error handling and debugging
 const loadUsers = async () => {
@@ -23,7 +24,6 @@ const loadUsers = async () => {
   try {
     isLoading.value = true;
     const response = await useListUsers();
-    console.log('User data response:', response.value);
     
     if (!response.value) {
       throw new Error('No data received from useListUsers');
@@ -66,12 +66,13 @@ async function submitForm() {
   });
 }
 
-const navigateToChat = (user: any) => {
+const navigateToChat = (receiver: any) => {
+
   // Navigate to chat with the selected user's ID
   router.push({
     path: '/app/chat',
     query: { 
-      receiverId: user.id // Using username as the receiver ID
+      receiverId: receiver.id
     }
   });
 };

@@ -1,19 +1,25 @@
-import { defineWebSocketHandler } from '#imports'
+import { defineWebSocketHandler } from "#imports";
 import type { Peer } from "crossws";
 import { getQuery } from "ufo";
-import { createOrFindChat } from '#imports';
+import { createOrFindChat, getUser } from "#imports";
 
 // Keep track of all connected peers
 const connectedPeers = new Set<Peer>();
 const users = new Map<string, { online: boolean }>();
 
 export default defineWebSocketHandler({
-  open(peer) {
+  async open(peer) {
     console.log(`[ws] open ${peer}`);
-    
-    const userId = getUserId(peer);
-    if (!userId) {
-      console.warn('User attempted to connect without userId');
+    const userId = getUserId(peer)
+    const receiverId = getReceiverId(peer)
+    const receiver = await getUser(receiverId)
+    const currentUser = await getUser(userId)
+    const chat = await createOrFindChat([userId, receiverId])
+    console.log('the receiver is', receiver)
+    console.log('the user is', currentUser)
+    console.log('the chat is', chat)
+    if (!currentUser) {
+      console.warn("User attempted to connect without userId");
       peer.send({
         user: "server",
         message: "Error: No user ID provided",
@@ -33,9 +39,8 @@ export default defineWebSocketHandler({
     });
 
     // Subscribe to the chat channel
-    peer.subscribe("chat");
-    peer.publish("chat", { user: "server", message: `${peer} joined!` });
-    
+    peer.subscribe(chat.id);
+    peer.publish(chat.id, { user: "server", message: `${peer} joined!` });
   },
 
   async message(peer, message) {
@@ -50,10 +55,8 @@ export default defineWebSocketHandler({
     // Store message in database
     // await addMessage(userId, '1', message.text());
 
-    
     // Publish to all other subscribers
-    broadcastMessage(messageObj)
-
+    broadcastMessage(messageObj);
   },
 
   close(peer, details) {
@@ -61,14 +64,14 @@ export default defineWebSocketHandler({
 
     const userId = getUserId(peer);
     users.set(userId, { online: false });
-    
+
     // Remove peer from connected peers set
     connectedPeers.delete(peer);
 
     // Broadcast leave message
     broadcastMessage({
       user: "server",
-      message: `${userId} left!`
+      message: `${userId} left!`,
     });
   },
 
@@ -94,18 +97,23 @@ function broadcastMessage(message: any) {
 }
 
 function getUserId(peer: Peer) {
-  console.log('Peer URL:', peer.url); // Debug log
-  // The URL in the peer object might be just the path part
-  // We need to get the raw URL from the request
-  const url = peer.url || peer.request?.url || '';
-  console.log('URL being parsed:', url);
+  const url = peer.url || peer.request?.url || "";
   const query = getQuery(url);
-  console.log('Query params:', query); // Debug log
   const userId = query.userId;
   if (!userId) {
-    console.warn('No userId found in query parameters');
+    console.warn("No userId found in query parameters");
   }
   return userId as string;
+}
+
+function getReceiverId(peer: Peer) {
+  const url = peer.url || peer.request?.url || "";
+  const query = getQuery(url);
+  const receiverId = query.receiverId;
+  if (!receiverId) {
+    console.warn("No receiverid found in query parameters");
+  }
+  return receiverId as string;
 }
 
 function getStats() {

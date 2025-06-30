@@ -15,11 +15,16 @@ definePageMeta({
   modal: true
 });
 let ws: WebSocket | undefined;
+const router = useRouter();
+const route = useRoute();
+
+const receiverId = route.query.receiverId;
 
 const message = ref<string>("");
 const messages = useState<{ id: number, user: string, message: string, created_at: string }[]>(() => []);
 
 const userId = useCookie<string>("userId")
+
 
 const user = useSupabaseUser();
 const userInitials = computed(() => {
@@ -62,7 +67,7 @@ const log = (user: string, ...args: string[]) => {
 const connect = async () => {
   const isSecure = location.protocol === "https:";
   console.log('user initials', userInitials)
-  const url = (isSecure ? "wss://" : "ws://") + location.host + "/api/chatWs?receiverId=" + encodeURIComponent(username.value);
+  const url = (isSecure ? "wss://" : "ws://") + location.host + `/api/chatWs?userId=${encodeURIComponent(user._value.id)}&receiverId=${encodeURIComponent(receiverId)}`;
   if (ws) {
     log("ws", "Closing previous connection before reconnecting...");
     ws.close();

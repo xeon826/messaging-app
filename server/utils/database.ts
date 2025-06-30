@@ -28,14 +28,15 @@ export async function addMessage(
 }
 
 export async function getUser(id: string) {
-  const user = await prisma.users.findUnique({
+  const user = await prisma.user.findUnique({
     where: {
       id: id,
     },
   });
+  return user;
 }
 
-export async function createOrFindChat(users: [string, string], title: string) {
+export async function createOrFindChat(users: [string, string]) {
   // Sort user IDs to ensure consistent ordering
   const [user1, user2] = users.sort();
 
@@ -64,7 +65,6 @@ export async function createOrFindChat(users: [string, string], title: string) {
   return prisma.chats.create({
     data: {
       id: chatId,
-      title: title,
       users: {
         create: [
           { userId: user1, joinedAt: new Date() },
