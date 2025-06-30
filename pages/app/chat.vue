@@ -132,11 +132,6 @@ const send = () => {
   message.value = '';
 };
 
-const ping = () => {
-  log('ws', 'Sending ping');
-  ws!.send('ping');
-};
-
 onMounted(() => {
   connect();
   scroll();

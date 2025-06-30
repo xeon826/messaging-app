@@ -30,14 +30,9 @@ export default defineWebSocketHandler({
 
     // Add peer to connected peers set
     connectedPeers.add(peer);
-    // users.set(userId, { online: true });
     users.set(userId, { online: true, receiver, currentUser, chat });
 
     const stats = getStats();
-    // peer.send({
-    //   user: "server",
-    //   message: `Welcome to the server ${userId}! (Online users: ${stats.online}/${stats.total})`,
-    // });
 
     // Subscribe to the chat channel
     peer.subscribe(chat.id);
@@ -48,18 +43,18 @@ export default defineWebSocketHandler({
     console.log(`[ws] message ${peer} ${message.text()}`);
 
     const userId = getUserId(peer);
+    const userData = users.get(userId);
+    const { receiver, currentUser, chat } = userData;
     const messageObj = {
-      user: userId,
+      user: currentUser.username,
       message: message.text(),
     };
 
-    const userData = users.get(userId);
     if (!userData) {
       console.warn("User data not found for peer", peer);
       return;
     }
 
-    const { receiver, currentUser, chat } = userData;
 
     // Store message in database
     await addMessage(currentUser.id, chat.id, messageObj.message);
