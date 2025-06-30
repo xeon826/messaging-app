@@ -18,9 +18,6 @@ export default defineWebSocketHandler({
     const receiver = await getUser(receiverId);
     const currentUser = await getUser(userId);
     const chat = await createOrFindChat([userId, receiverId]);
-    console.log("the receiver is", receiver);
-    console.log("the user is", currentUser);
-    console.log("the chat is", chat);
     if (!currentUser) {
       console.warn("User attempted to connect without userId");
       peer.send({
@@ -37,10 +34,10 @@ export default defineWebSocketHandler({
     users.set(userId, { online: true, receiver, currentUser, chat });
 
     const stats = getStats();
-    peer.send({
-      user: "server",
-      message: `Welcome to the server ${userId}! (Online users: ${stats.online}/${stats.total})`,
-    });
+    // peer.send({
+    //   user: "server",
+    //   message: `Welcome to the server ${userId}! (Online users: ${stats.online}/${stats.total})`,
+    // });
 
     // Subscribe to the chat channel
     peer.subscribe(chat.id);

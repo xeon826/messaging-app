@@ -110,11 +110,8 @@ export async function createOrFindChat(users: [string, string]) {
 //   });
 // }
 
-export async function getMessages(
-  // chatId: string,
-  count = 25,
-) {
-  return prisma.message.findMany({
+export async function getMessages(chatId: string, count = 25) {
+  const result = prisma.message.findMany({
     // where: {
     //   chatId: chatId,
     // },
@@ -132,4 +129,6 @@ export async function getMessages(
     //   }
     // }
   });
+  console.log('messages', result)
+  return result;
 }
