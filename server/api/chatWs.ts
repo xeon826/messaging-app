@@ -1,7 +1,7 @@
 import { defineWebSocketHandler } from "#imports";
 import type { Peer } from "crossws";
 import { getQuery } from "ufo";
-import { createOrFindChat, getUser } from "#imports";
+import { createOrFindChat, getUser, addMessage } from "#imports";
 
 // Keep track of all connected peers
 const connectedPeers = new Set<Peer>();
@@ -53,7 +53,7 @@ export default defineWebSocketHandler({
     };
 
     // Store message in database
-    // await addMessage(userId, '1', message.text());
+    await addMessage(userId, '1', message.text());
 
     // Publish to all other subscribers
     broadcastMessage(messageObj);
