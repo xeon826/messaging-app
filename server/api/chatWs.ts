@@ -5,19 +5,22 @@ import { createOrFindChat, getUser, addMessage } from "#imports";
 
 // Keep track of all connected peers
 const connectedPeers = new Set<Peer>();
-const users = new Map<string, { online: boolean }>();
+const users = new Map<
+  string,
+  { online: boolean; receiver?: any; currentUser?: any; chat?: any }
+>();
 
 export default defineWebSocketHandler({
   async open(peer) {
     console.log(`[ws] open ${peer}`);
-    const userId = getUserId(peer)
-    const receiverId = getReceiverId(peer)
-    const receiver = await getUser(receiverId)
-    const currentUser = await getUser(userId)
-    const chat = await createOrFindChat([userId, receiverId])
-    console.log('the receiver is', receiver)
-    console.log('the user is', currentUser)
-    console.log('the chat is', chat)
+    const userId = getUserId(peer);
+    const receiverId = getReceiverId(peer);
+    const receiver = await getUser(receiverId);
+    const currentUser = await getUser(userId);
+    const chat = await createOrFindChat([userId, receiverId]);
+    console.log("the receiver is", receiver);
+    console.log("the user is", currentUser);
+    console.log("the chat is", chat);
     if (!currentUser) {
       console.warn("User attempted to connect without userId");
       peer.send({
@@ -30,7 +33,8 @@ export default defineWebSocketHandler({
 
     // Add peer to connected peers set
     connectedPeers.add(peer);
-    users.set(userId, { online: true });
+    // users.set(userId, { online: true });
+    users.set(userId, { online: true, receiver, currentUser, chat });
 
     const stats = getStats();
     peer.send({
@@ -52,8 +56,16 @@ export default defineWebSocketHandler({
       message: message.text(),
     };
 
+    const userData = users.get(userId);
+    if (!userData) {
+      console.warn("User data not found for peer", peer);
+      return;
+    }
+
+    const { receiver, currentUser, chat } = userData;
+
     // Store message in database
-    await addMessage(userId, '1', message.text());
+    await addMessage(currentUser.id, chat.id, messageObj.message);
 
     // Publish to all other subscribers
     broadcastMessage(messageObj);
