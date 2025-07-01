@@ -91,7 +91,6 @@ export async function createOrFindChat(users: [string, string]) {
 
 export async function getMessages(users: [string, string], count = 25) {
   var chat = await createOrFindChat(users);
-  console.log("the chat id", chat.id);
   const result = prisma.message.findMany({
     where: {
       chatId: chat.id,
