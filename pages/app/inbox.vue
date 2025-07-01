@@ -135,7 +135,7 @@ console.log('the unread messages', unreadMessages);
                 v-for="unreadMessage in unreadMessages"
                 :key="unreadMessage.id"
                 class="hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer"
-                @click="navigateToChat(unreadMessage)"
+                @click="navigateToChat(unreadMessage.user)"
               >
                 <td class="truncate-text px-6 py-4 text-sm">{{ unreadMessage.message }}</td>
                 <td class="px-6 py-4 text-sm">

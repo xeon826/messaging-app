@@ -1,11 +1,12 @@
 <script lang="ts" setup>
+import { navigateToChat } from '~/utils/navigateToChat';
 
 definePageMeta({
   title: 'Messenger',
   name: 'Messenger',
   // Add middleware to ensure authentication
   middleware: ['auth'],
-  layout: 'default'
+  layout: 'default',
 });
 
 const toastStore = useToastStore();
@@ -26,7 +27,7 @@ const loadUsers = async () => {
     const response = await useListUsers();
 
     if (!response.value) {
-      throw new Error("No data received from useListUsers");
+      throw new Error('No data received from useListUsers');
     }
 
     // Filter out the current user from the response
@@ -43,7 +44,6 @@ const loadUsers = async () => {
     isLoading.value = false;
   }
 };
-
 
 // Add watch effect to reload data when auth state changes
 watchEffect(() => {
@@ -66,18 +66,6 @@ async function submitForm() {
     title: 'contact.success',
   });
 }
-
-const navigateToChat = (receiver: any) => {
-
-  // Navigate to chat with the selected user's ID
-  router.push({
-    path: '/app/chat',
-    query: { 
-      receiverId: receiver.id
-    }
-  });
-};
-
 </script>
 
 <template>
@@ -96,15 +84,17 @@ const navigateToChat = (receiver: any) => {
 
       <!-- Loading state -->
       <div v-if="isLoading" class="text-center py-8">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+        <div
+          class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"
+        ></div>
         <p class="mt-4">{{ $t('messenger.loading') }}</p>
       </div>
 
       <!-- Error state -->
       <div v-else-if="!users.length" class="text-center py-8">
         <p class="text-gray-500">{{ $t('messenger.no_users') }}</p>
-        <button 
-          @click="loadUsers" 
+        <button
+          @click="loadUsers"
           class="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
         >
           {{ $t('messenger.retry') }}
@@ -115,7 +105,9 @@ const navigateToChat = (receiver: any) => {
       <template v-else>
         <!-- Table -->
         <div class="max-w-[900px] mx-auto mt-8">
-          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <table
+            class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+          >
             <thead>
               <tr>
                 <th class="px-6 py-3 text-left text-sm font-semibold">
