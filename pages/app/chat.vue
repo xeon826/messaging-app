@@ -25,6 +25,9 @@ const messages = useState<
   { id: string; user_id: string; message: string; created_at: string }[]
 >(() => []);
 
+// Clear all messages before re-rendering the page
+messages.value.splice(0, messages.value.length);
+
 const userId = useCookie<string>('userId');
 
 const user = useSupabaseUser();
