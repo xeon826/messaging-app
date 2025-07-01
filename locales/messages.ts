@@ -13,6 +13,9 @@ import fr_seo from "./fr/seo.json";
 import en_messenger from "./en/messenger.json";
 import fr_messenger from "./fr/messenger.json";
 
+import en_inbox from "./en/inbox.json";
+import fr_inbox from "./fr/inbox.json";
+
 const messages = {
   en: {
     global: en_global,
@@ -20,6 +23,7 @@ const messages = {
     navigation: en_navigation,
     seo: en_seo,
     messenger: en_messenger,  
+    inbox: en_inbox,  
   },
   fr: {
     global: fr_global,
@@ -27,6 +31,7 @@ const messages = {
     navigation: fr_navigation,
     seo: fr_seo,
     messenger: fr_messenger,  
+    inbox: fr_inbox,  
   },
 };
 

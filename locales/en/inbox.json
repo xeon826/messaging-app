@@ -1,0 +1,6 @@
+{
+  "title": "Inbox",
+  "description": "Unread messages",
+  "loading": "loading...",
+  "no_unread_messages": "You have no unread messages."
+}

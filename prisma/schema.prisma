@@ -9,6 +9,18 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model ReadReceipt {
+  id        Int      @id @default(autoincrement())
+  userId    String   @map("user_id")
+  messageId Int      @map("message_id")
+  readAt    DateTime @default(now()) @map("read_at")
+  user      User     @relation(fields: [userId], references: [id])
+  message   Message  @relation(fields: [messageId], references: [id])
+
+  @@unique([userId, messageId])
+  @@map("read_receipts")
+}
+
 model Message {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now()) @map("created_at")
@@ -17,6 +29,7 @@ model Message {
   sender     User?    @relation("SentMessages", fields: [userId], references: [id])
   chatId     String   @map("chat_id") // Add chat relationship
   chat       Chats    @relation(fields: [chatId], references: [id])
+  reads      ReadReceipt[] // Add this field for the reverse relation to ReadReceipt
 
   @@map("messages")
 }
@@ -28,7 +41,8 @@ model User {
   firstName        String    @map("first_name")
   lastName         String    @map("last_name")
   sentMessages     Message[] @relation("SentMessages")
-  chats           ChatUser[]
+  chats            ChatUser[]
+  readReceipts     ReadReceipt[] // Add this field for the reverse relation to ReadReceipt
 
   @@map("users")
 }

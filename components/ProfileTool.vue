@@ -4,6 +4,10 @@ import { MenuButton, Menu, MenuItems } from "@headlessui/vue";
 const navigation = getNavigation("home");
 const user = useSupabaseUser();
 
+const profile_navigation = [
+  { name: "Inbox" },
+];
+
 // Function to get user initials from email or name
 const userInitials = computed(() => {
   const metadata = user.value?.user_metadata;
