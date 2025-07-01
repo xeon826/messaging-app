@@ -97,15 +97,6 @@ export default defineNuxtConfig({
       routes: ["/sitemap.xml"],
     },
   },
-  $production: {
-    nitro: {
-      database: {
-        default: {
-          connector: "bun",
-        },
-      },
-    },
-  },
   svgo: {
     autoImportPath: "./assets/logo/",
   },
