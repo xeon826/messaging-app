@@ -15,26 +15,45 @@ const unreadMessageData = ref(null);
 const router = useRouter();
 const route = useRoute();
 
-// Modified to include better error handling and debugging
+// Formatting function
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: true,
+  }).format(date);
+}
+
+// Load unread messages with error handling
 const loadUnreadMessages = async () => {
-  console.log('Loading unread messages, current auth state:', { user: user.value });
-  
+  console.log('Loading unread messages, current auth state:', {
+    user: user.value,
+  });
+
   try {
     isLoading.value = true;
     const response = await useLoadUnreadMessages();
-    
+
     if (!response.value) {
       throw new Error('No data received from useLoadUnreadMessages');
     }
-    
+
     // Store the users directly since we're now returning the array
-    unreadMessages.value = response.value;
-    unreadMessageData.value = response.value;
+    unreadMessages.value = response.value.map((message) => ({
+      ...message,
+      formattedCreatedAt: formatDate(message.createdAt),
+    }));
+    unreadMessageData.value = unreadMessages.value;
   } catch (error) {
     console.error('Error fetching unread message data:', error);
     toastStore.showErrorToast({
       title: 'Error',
-      message: 'Failed to load message data. Please try again.'
+      message: 'Failed to load message data. Please try again.',
     });
     unreadMessages.value = [];
   } finally {
@@ -103,14 +122,12 @@ console.log('the unread messages', unreadMessages);
             <thead>
               <tr>
                 <th class="px-6 py-3 text-left text-sm font-semibold">
-                    Message
+                  Message
                 </th>
                 <th class="px-6 py-3 text-left text-sm font-semibold">
-                    Created At
+                  Sent At
                 </th>
-                <th class="px-6 py-3 text-left text-sm font-semibold">
-                    User
-                </th>
+                <th class="px-6 py-3 text-left text-sm font-semibold">User</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -120,8 +137,10 @@ console.log('the unread messages', unreadMessages);
                 class="hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer"
                 @click="navigateToChat(unreadMessage)"
               >
-                <td class="px-6 py-4 text-sm">{{ unreadMessage.message }}</td>
-                <td class="px-6 py-4 text-sm">{{ unreadMessage.createdAt }}</td>
+                <td class="truncate-text px-6 py-4 text-sm">{{ unreadMessage.message }}</td>
+                <td class="px-6 py-4 text-sm">
+                  {{ unreadMessage.formattedCreatedAt }}
+                </td>
                 <td class="px-6 py-4 text-sm">
                   {{ unreadMessage.sender.username }}
                 </td>
@@ -134,4 +153,11 @@ console.log('the unread messages', unreadMessages);
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.truncate-text {
+  max-width: 100px; /* Adjust the width as needed */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>

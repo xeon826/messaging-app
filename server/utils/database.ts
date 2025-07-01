@@ -80,10 +80,10 @@ export async function createOrFindChat(users: [string, string]) {
 }
 
 export async function getMessages(users: [string, string], count = 25) {
-  var chat = await createOrFindChat(users)
+  var chat = await createOrFindChat(users);
   const result = prisma.message.findMany({
     where: {
-      chatId: chat.id
+      chatId: chat.id,
     },
     orderBy: {
       createdAt: "asc",
@@ -93,13 +93,12 @@ export async function getMessages(users: [string, string], count = 25) {
       sender: {
         select: {
           username: true,
-        }
-      }
-    }
+        },
+      },
+    },
   });
   return result;
 }
-
 
 export async function markMessageAsRead(userId, messageId) {
   try {
@@ -117,24 +116,22 @@ export async function markMessageAsRead(userId, messageId) {
       create: {
         userId: userId,
         messageId: messageId,
-        readAt: new Date(),  // Set the read timestamp for the first time
+        readAt: new Date(), // Set the read timestamp for the first time
       },
     });
 
-    console.log('Message marked as read:', readReceipt);
+    console.log("Message marked as read:", readReceipt);
   } catch (error) {
-    console.error('Error marking message as read:', error);
+    console.error("Error marking message as read:", error);
   } finally {
     await prisma.$disconnect();
   }
 }
 
-
-
 export async function getUnreadMessages(userId: string) {
   try {
     if (!userId) {
-      throw new Error('User ID must be provided');
+      throw new Error("User ID must be provided");
     }
 
     // Retrieve messages that do not have a read receipt for the user
@@ -157,6 +154,11 @@ export async function getUnreadMessages(userId: string) {
               },
             },
           },
+          {
+            NOT: {
+              userId: userId, // Exclude messages sent by the user themselves using `NOT`
+            },
+          },
         ],
       },
       include: {
@@ -170,14 +172,12 @@ export async function getUnreadMessages(userId: string) {
         },
       },
     });
-
     return unreadMessages;
   } catch (error) {
-    console.error('Error fetching unread messages:', error);
-    throw new Error('Failed to fetch unread messages');
+    console.error("Error fetching unread messages:", error);
+    throw new Error("Failed to fetch unread messages");
   } finally {
     // Disconnect the Prisma client instance to prevent connection leaks
     await prisma.$disconnect();
   }
 }
-
