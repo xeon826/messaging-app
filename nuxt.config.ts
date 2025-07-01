@@ -1,6 +1,7 @@
+
 export default defineNuxtConfig({
   alias: {
-    ".prisma/client/index-browser": "@prisma/client",
+    ".prisma/client/index-browser": '/node_modules/.prisma/client/index-browser.js',
   },
   app: {
     layoutTransition: {
@@ -11,10 +12,6 @@ export default defineNuxtConfig({
       name: "fade",
       mode: "out-in",
     },
-  },
-
-  routeRules: {
-    "/": { isr: true, prerender: true },
   },
 
   css: ["~/assets/style/main.scss"],
@@ -28,11 +25,18 @@ export default defineNuxtConfig({
   devServer: {
     port: 3000,
   },
-
   runtimeConfig: {
-    private: {
-      resendApiKey: process.env.RESEND_API_KEY,
-    },
+    // Server-side only
+    supabaseKey: process.env.SUPABASE_KEY,
+    supabaseServiceKey: process.env.SUPABASE_SERVICE_KEY,
+    supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
+    databaseUrl: process.env.DATABASE_URL,
+    directUrl: process.env.DIRECT_URL,
+    nuxtSessionPassword: process.env.NUXT_SESSION_PASSWORD,
+
+    public: {
+      supabaseUrl: process.env.SUPABASE_URL
+    }
   },
 
   modules: [
@@ -87,7 +91,6 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    preset: 'node-server',
     experimental: {
       websocket: true,
       tasks: true,
