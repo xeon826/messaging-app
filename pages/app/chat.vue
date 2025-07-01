@@ -53,7 +53,7 @@ if (!messages.value.length) {
   const { data: result } = await useFetch('/api/messages', {
     params: { users: [user.value.id, receiverId] },
   });
-  const messageIds = result.value.messages.map((msg) => msg.id);
+  const messageIds = result.value.messages.map((msg) => msg.id) ?? [];
   await useFetch('/api/setMessagesAsRead', {
     params: { userId: user.value.id, messageIds: messageIds },
   });

@@ -20,29 +20,30 @@ const route = useRoute();
 // Modified to include better error handling and debugging
 const loadUsers = async () => {
   console.log('Loading users, current auth state:', { user: user.value });
-  
+
   try {
     isLoading.value = true;
     const response = await useListUsers();
-    
+
     if (!response.value) {
-      throw new Error('No data received from useListUsers');
+      throw new Error("No data received from useListUsers");
     }
-    
-    // Store the users directly since we're now returning the array
-    users.value = response.value;
-    userData.value = response.value;
+
+    // Filter out the current user from the response
+    users.value = response.value.filter((u) => u.id !== user.value.id);
+    userData.value = users.value; // set userData.value to filtered users as well
   } catch (error) {
     console.error('Error fetching user data:', error);
     toastStore.showErrorToast({
       title: 'Error',
-      message: 'Failed to load user data. Please try again.'
+      message: 'Failed to load user data. Please try again.',
     });
     users.value = [];
   } finally {
     isLoading.value = false;
   }
 };
+
 
 // Add watch effect to reload data when auth state changes
 watchEffect(() => {
