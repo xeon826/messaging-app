@@ -87,6 +87,7 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    preset: 'node-server',
     experimental: {
       websocket: true,
       tasks: true,
