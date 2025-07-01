@@ -1,4 +1,7 @@
 export default defineNuxtConfig({
+  alias: {
+    ".prisma/client/index-browser": "@prisma/client",
+  },
   app: {
     layoutTransition: {
       name: "fade",
@@ -23,7 +26,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   devServer: {
-    port: 3000
+    port: 3000,
   },
 
   runtimeConfig: {
@@ -80,7 +83,7 @@ export default defineNuxtConfig({
   },
 
   image: {
-    dir: "assets"
+    dir: "assets",
   },
 
   nitro: {
@@ -109,6 +112,6 @@ export default defineNuxtConfig({
 
   plugins: [
     { src: "~/plugins/vercel.ts", mode: "client" },
-    { src: "~/plugins/prisma.ts" }
+    { src: "~/plugins/prisma.ts" },
   ],
 });

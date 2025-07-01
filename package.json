@@ -47,6 +47,7 @@
   "dependencies": {
     "@prisma/client": "^6.10.1",
     "@types/ws": "^8.18.1",
+    "caniuse-lite": "^1.0.30001726",
     "cookie-es": "^2.0.0",
     "crossws": "^0.4.1",
     "h3": "^1.15.3",

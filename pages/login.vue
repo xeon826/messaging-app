@@ -160,16 +160,7 @@ const signWithGoogle = async () => {
             />
           </div>
         </div>
-        <div class="flex items-center justify-end">
-          <div class="text-sm">
-            <NuxtLink
-              :to="{ name: 'ForgotPassword' }"
-              class="font-medium text-accent hover:text-accent-hover"
-            >
-              Forgot your password?
-            </NuxtLink>
-          </div>
-        </div>
+
 
         <div>
           <button 
