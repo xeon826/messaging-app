@@ -2,6 +2,7 @@
   "title": "Inbox",
   "description": "Messagesn non lus",
   "loading": "chargement...",
-  "no_unread_messages": "Vous n'avez aucun message non lu."
+  "no_unread_messages": "Vous n'avez aucun message non lu.",
+  "retry": "Rafraîchir"
 }
 

@@ -100,29 +100,37 @@ export async function getMessages(users: [string, string], count = 25) {
   return result;
 }
 
-export async function markMessageAsRead(userId, messageId) {
+export async function markMessagesAsRead(userId, messageIds) {
   try {
-    // Create a read receipt or find the existing one
-    const readReceipt = await prisma.readReceipt.upsert({
-      where: {
-        userId_messageId: {
-          userId: userId,
-          messageId: messageId,
-        },
-      },
-      update: {
-        readAt: new Date(), // Update the read timestamp if already exists
-      },
-      create: {
-        userId: userId,
-        messageId: messageId,
-        readAt: new Date(), // Set the read timestamp for the first time
-      },
-    });
+    // Ensure messageIds is an array
+    if (!Array.isArray(messageIds)) {
+      throw new Error("messageIds should be an array.");
+    }
 
-    console.log("Message marked as read:", readReceipt);
+    const readReceipts = await Promise.all(
+      messageIds.map(async (messageId) => {
+        return prisma.readReceipt.upsert({
+          where: {
+            userId_messageId: {
+              userId: userId,
+              messageId: +messageId,
+            },
+          },
+          update: {
+            readAt: new Date(), // Update the read timestamp if it already exists
+          },
+          create: {
+            userId: userId,
+            messageId: +messageId,
+            readAt: new Date(), // Set the read timestamp for the first time
+          },
+        });
+      }),
+    );
+
+    console.log("Messages marked as read:", readReceipts);
   } catch (error) {
-    console.error("Error marking message as read:", error);
+    console.error("Error marking messages as read:", error);
   } finally {
     await prisma.$disconnect();
   }

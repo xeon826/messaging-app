@@ -51,8 +51,13 @@ if (!userId.value) {
 
 if (!messages.value.length) {
   const { data: result } = await useFetch('/api/messages', {
-    params: { users: [user._value.id, receiverId] },
+    params: { users: [user.value.id, receiverId] },
   });
+  const messageIds = result.value.messages.map((msg) => msg.id);
+  await useFetch('/api/setMessagesAsRead', {
+    params: { userId: user.value.id, messageIds: messageIds },
+  });
+
   const options = {
     year: 'numeric',
     month: 'numeric',
