@@ -42,15 +42,25 @@ export async function createOrFindChat(users: [string, string]) {
   const [user1, user2] = users.sort();
 
   // First try to find existing chat between these users
+
   const existingChat = await prisma.chats.findFirst({
     where: {
-      users: {
-        every: {
-          userId: {
-            in: [user1, user2],
+      AND: [
+        {
+          users: {
+            some: {
+              userId: user1,
+            },
           },
         },
-      },
+        {
+          users: {
+            some: {
+              userId: user2,
+            },
+          },
+        },
+      ],
     },
     include: {
       users: true,
@@ -81,6 +91,7 @@ export async function createOrFindChat(users: [string, string]) {
 
 export async function getMessages(users: [string, string], count = 25) {
   var chat = await createOrFindChat(users);
+  console.log("the chat id", chat.id);
   const result = prisma.message.findMany({
     where: {
       chatId: chat.id,
