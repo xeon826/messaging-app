@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { generateName } from '~/utils/string';
+import { onBeforeRouteLeave } from 'vue-router';
 import { navigateTo } from '#imports';
 definePageMeta({
   title: 'Chat',
@@ -157,6 +158,14 @@ onMounted(() => {
   onUnmounted(() => {
     window.removeEventListener('keydown', handleEsc);
   });
+});
+
+onBeforeRouteLeave((to, from, next) => {
+  if (ws) {
+    ws.close();
+    console.log('[ws] WebSocket closed on route leave');
+  }
+  next();
 });
 
 useServerHead({

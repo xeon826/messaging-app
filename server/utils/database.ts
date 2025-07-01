@@ -139,7 +139,6 @@ export async function markMessagesAsRead(userId, messageIds) {
       }),
     );
 
-    console.log("Messages marked as read:", readReceipts);
   } catch (error) {
     console.error("Error marking messages as read:", error);
   } finally {
