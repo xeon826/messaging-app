@@ -1,7 +1,19 @@
-
 export default defineNuxtConfig({
   alias: {
-    ".prisma/client/index-browser": '/node_modules/.prisma/client/index-browser.js',
+    ".prisma/client/index-browser":
+      "/node_modules/.prisma/client/index-browser.js",
+  },
+  vite: {
+    server: {
+      allowedHosts: true,
+    },
+  },
+  auth: {
+    cookie: {
+      options: {
+        httpOnly: true,
+      },
+    },
   },
   app: {
     layoutTransition: {
@@ -35,8 +47,8 @@ export default defineNuxtConfig({
     nuxtSessionPassword: process.env.NUXT_SESSION_PASSWORD,
 
     public: {
-      supabaseUrl: process.env.SUPABASE_URL
-    }
+      supabaseUrl: process.env.SUPABASE_URL,
+    },
   },
 
   modules: [
@@ -89,8 +101,9 @@ export default defineNuxtConfig({
   image: {
     dir: "assets",
   },
-
+  compatibilityDate: "2024-11-01",
   nitro: {
+    preset: 'node-server',
     experimental: {
       websocket: true,
       tasks: true,
