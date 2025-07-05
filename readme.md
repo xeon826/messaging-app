@@ -30,6 +30,29 @@ To configure the software:
 
 Run the following command to install dependencies
 
+## Create database trigger on the auth table in Supabase dashboard by navigating to the SQL Editor tab. This will be used to insert a user into the public.users table upon successful sign-up, ensuring best practices.
+```sql
+insert into public.users (
+  id,
+  email,
+  username,
+  first_name,
+  last_name
+)
+select 
+  a.id,
+  a.email,
+  a.raw_user_meta_data->>'user_name',
+  split_part(coalesce(a.raw_user_meta_data->>'full_name', ''), ' ', 1),
+  split_part(coalesce(a.raw_user_meta_data->>'full_name', ''), ' ', 2)
+from auth.users a
+where not exists (
+  select 1 
+  from public.users u 
+  where u.id::uuid = a.id
+);
+```
+
 ```bash
 bun install
 ```
@@ -43,4 +66,6 @@ bun dev
 ```
 
 Navigate to localhost:3000 and click "Signup". After inputting your credentials, you'll get a confirmation email that you'll use to confirm you email. After which you'll be able to log in.
+
+
 
