@@ -30,7 +30,14 @@ To configure the software:
 
 Run the following command to install dependencies
 
-## Create database trigger on the auth table in Supabase dashboard by navigating to the SQL Editor tab. This will be used to insert a user into the public.users table upon successful sign-up, ensuring best practices.
+```bash
+bun install
+```
+
+## Create database trigger on the auth table in Supabase dashboard
+
+Navigate to the SQL Editor tab and run the following SQL. This will be used to insert a user into the public.users table upon successful sign-up, ensuring best practices.
+
 ```sql
 insert into public.users (
   id,
@@ -51,10 +58,6 @@ where not exists (
   from public.users u 
   where u.id::uuid = a.id
 );
-```
-
-```bash
-bun install
 ```
 
 ## Launch the App
