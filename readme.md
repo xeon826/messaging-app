@@ -36,7 +36,7 @@ bun install
 
 ## Create database trigger on the auth table in Supabase dashboard
 
-Navigate to the SQL Editor tab and run the following SQL. This will be used to insert a user into the public.users table upon successful sign-up, ensuring best practices.
+Navigate to the SQL Editor tab and run the following SQL. This will be used to insert a user into the public.users table upon successful sign-up.
 
 ```sql
 insert into public.users (
