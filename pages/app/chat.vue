@@ -22,6 +22,9 @@ const route = useRoute();
 const receiverId = route.query.receiverId;
 
 const message = ref<string>('');
+const isMounted = ref(false);
+const isInitializing = ref(true);
+const isLoadingMessages = ref(true);
 const messages = useState<
   { id: string; user_id: string; message: string; created_at: string }[]
 >(() => []);
@@ -53,40 +56,67 @@ if (!userId.value) {
   userId.value = generateName();
 }
 
-if (!messages.value.length) {
-  const { data: result } = await useFetch('/api/messages', {
-    params: { users: [user.value.id, receiverId] },
-  });
-  const messageIds = result.value.messages.map((msg) => msg.id);
-  if (messageIds.length)
-    await useFetch('/api/setMessagesAsRead', {
-      params: { userId: user.value.id, messageIds: messageIds },
-    });
+// Function to handle smart navigation back
+const goBack = () => {
+  // Check if there's a previous route in history
+  if (window.history.length > 1) {
+    // Try to go back to previous route
+    router.back();
+  } else {
+    // Fallback to messenger page if no previous route
+    navigateTo('/app/messenger');
+  }
+};
 
-  const options = {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    hour12: true, // Use 12-hour clock
-  };
-  var messages_formatted = result.value.messages.map((msg) => {
-    var date = new Date(msg.createdAt);
-    const formatted_date = new Intl.DateTimeFormat('en-US', options).format(
-      date,
-    );
-    return {
-      message: msg.message,
-      user: msg.sender.username,
-      created_at: formatted_date,
-    };
-  });
+// Function to load messages asynchronously (moved from blocking top-level)
+const loadMessages = async () => {
+  try {
+    if (!messages.value.length) {
+      const result = await $fetch('/api/messages', {
+        params: { users: [user.value.id, receiverId] },
+      });
+      
+      // Add validation to ensure result and result.messages exist
+      if (result && result.messages && Array.isArray(result.messages)) {
+        const messageIds = result.messages.map((msg) => msg.id);
+        if (messageIds.length) {
+          await $fetch('/api/setMessagesAsRead', {
+            params: { userId: user.value.id, messageIds: messageIds },
+          });
+        }
 
-  // Directly access .value on messages when updating
-  messages.value.push(...messages_formatted);
-}
+        const options = {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+          hour12: true, // Use 12-hour clock
+        };
+        
+        const messages_formatted = result.messages.map((msg) => {
+          const date = new Date(msg.createdAt);
+          const formatted_date = new Intl.DateTimeFormat('en-US', options).format(date);
+          return {
+            message: msg.message,
+            user: msg.sender.username,
+            created_at: formatted_date,
+          };
+        });
+
+        // Directly access .value on messages when updating
+        messages.value.push(...messages_formatted);
+      } else {
+        console.warn('Invalid messages response format:', result);
+      }
+    }
+  } catch (error) {
+    console.error('Error loading messages:', error);
+  } finally {
+    isLoadingMessages.value = false;
+  }
+};
 
 const log = (user: string, ...args: string[]) => {
   console.log('[ws]', user, ...args);
@@ -144,13 +174,27 @@ const send = () => {
   message.value = '';
 };
 
-onMounted(() => {
-  connect();
-  scroll();
+onMounted(async () => {
+  try {
+    isMounted.value = true;
+    
+    // Load messages and connect to WebSocket in parallel
+    await Promise.all([
+      loadMessages(),
+      connect()
+    ]);
+    
+    scroll();
+    isInitializing.value = false;
+    console.log('Chat fully initialized');
+  } catch (error) {
+    console.error('Error initializing chat:', error);
+    isInitializing.value = false;
+  }
 
   const handleEsc = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
-      navigateTo('/app/messenger');
+      goBack();
     }
   };
   window.addEventListener('keydown', handleEsc);
@@ -180,9 +224,17 @@ useServerHead({
     <div
       class="modal-content bg-slate-900 w-full max-w-4xl h-[90vh] rounded-lg overflow-hidden relative flex flex-col"
     >
+      <!-- Loading overlay - shows before mount and during initialization -->
+      <div v-if="!isMounted || isInitializing" class="absolute inset-0 bg-slate-900 bg-opacity-95 flex items-center justify-center z-20">
+        <div class="text-center">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p class="text-white text-lg">{{ !isMounted ? 'Loading chat...' : 'Connecting...' }}</p>
+        </div>
+      </div>
+
       <!-- Close button -->
       <button
-        @click="navigateTo('/app/messenger')"
+        @click="goBack"
         class="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
       >
         <svg
