@@ -1,7 +1,7 @@
 {
   "title": "Messenger",
   "description": "Let's talk about your ideas, projects or anything else",
-  "loading": "Loading...",
+  "loading": "Loading users...",
   "fullname": "Fullname",
   "email": "Email",
   "phone": "Phone",
