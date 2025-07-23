@@ -103,7 +103,6 @@ export default defineNuxtConfig({
   },
   compatibilityDate: "2024-11-01",
   nitro: {
-    preset: 'node-server',
     experimental: {
       websocket: true,
       tasks: true,
@@ -114,12 +113,14 @@ export default defineNuxtConfig({
       routes: ["/sitemap.xml"],
     },
   },
+  hub: {
+    workers: true
+  },
   svgo: {
     autoImportPath: "./assets/logo/",
   },
 
   plugins: [
-    { src: "~/plugins/vercel.ts", mode: "client" },
     { src: "~/plugins/prisma.ts" },
   ],
 });
