@@ -17,6 +17,7 @@ const passwordConfirm = ref("");
 
 const loading = ref(false);
 const error = ref<string | null>(null);
+const success = ref(false);
 
 watchEffect(async () => {
   if (user.value) {
@@ -70,15 +71,21 @@ const signup = async () => {
       return;
     }
 
-    // If signup successful, redirect to login with success parameter
+    // If signup successful, show success state and redirect
     if (data?.user) {
-      await navigateTo("/login?email_confirmation=success");
+      success.value = true;
+      // Keep loading state true to prevent UI flickering
+      setTimeout(async () => {
+        await navigateTo("/login?email_confirmation=success");
+      }, 1500); // Short delay to show success message
     }
   } catch (err) {
     console.error("Signup error:", err);
     error.value = "An unexpected error occurred during signup";
   } finally {
-    loading.value = false;
+    if (!success.value) {
+      loading.value = false;
+    }
   }
 };
 
@@ -134,8 +141,14 @@ const signWithGithub = async () => {
         {{ error }}
       </div>
 
+      <!-- Success Alert -->
+      <div v-if="success" class="mb-4 p-4 bg-green-100 text-green-700 rounded-md">
+        <p class="font-medium">Signup successful!</p>
+        <p class="text-sm">Redirecting you to login page...</p>
+      </div>
+
       <Loader v-if="loading" />
-      <form class="space-y-6" @submit.prevent="signup" v-else>
+      <form class="space-y-6" @submit.prevent="signup" v-else-if="!success">
         <input
           id="username"
           name="username"
