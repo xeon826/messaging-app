@@ -10,10 +10,17 @@ definePageMeta({
 const login = ref("");
 const password = ref("");
 const error = ref<string | null>(null);
+const emailConfirmationSuccess = ref(false);
 
 const client = useSupabaseClient();
 const user = useSupabaseUser();
 const loading = ref(false);
+
+// Check for email confirmation success query parameter
+const route = useRoute();
+if (route.query.email_confirmation === 'success') {
+  emailConfirmationSuccess.value = true;
+}
 
 // Add debug logging for initial state
 console.log('Initial auth state:', { user: user.value, client });
@@ -123,6 +130,12 @@ const signWithGoogle = async () => {
       </h2>
     </div>
     <div class="sm:mx-auto sm:w-full sm:max-w-md mt-12">
+      <!-- Email Confirmation Success Alert -->
+      <div v-if="emailConfirmationSuccess" class="mb-4 p-4 bg-green-100 text-green-700 rounded-md">
+        <p class="font-medium">Email confirmation sent!</p>
+        <p class="text-sm">Please check your email to confirm your account before signing in.</p>
+      </div>
+
       <!-- Error Alert -->
       <div v-if="error" class="mb-4 p-4 bg-red-100 text-red-700 rounded-md">
         {{ error }}

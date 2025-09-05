@@ -16,6 +16,7 @@ const password = ref("");
 const passwordConfirm = ref("");
 
 const loading = ref(false);
+const error = ref<string | null>(null);
 
 watchEffect(async () => {
   if (user.value) {
@@ -25,14 +26,35 @@ watchEffect(async () => {
 
 const signup = async () => {
   try {
+    error.value = null;
     loading.value = true;
-    
-    // Validate passwords match
-    if (password.value !== passwordConfirm.value) {
-      throw new Error("Passwords do not match");
+
+    // Validate all fields
+    if (!username.value || !firstname.value || !lastname.value || !email.value || !password.value || !passwordConfirm.value) {
+      error.value = "Please fill in all fields";
+      return;
     }
 
-    const { error, data } = await auth.signUp({
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.value)) {
+      error.value = "Please enter a valid email address";
+      return;
+    }
+
+    // Validate passwords match
+    if (password.value !== passwordConfirm.value) {
+      error.value = "Passwords do not match";
+      return;
+    }
+
+    // Validate password strength
+    if (password.value.length < 6) {
+      error.value = "Password must be at least 6 characters long";
+      return;
+    }
+
+    const { error: signupError, data } = await auth.signUp({
       email: email.value,
       password: password.value,
       options: {
@@ -43,45 +65,63 @@ const signup = async () => {
       },
     });
 
-    if (error) throw error;
-
-    // If signup successful, redirect to messenger
-    if (data?.user) {
-      await navigateTo("/app/messenger");
+    if (signupError) {
+      error.value = signupError.message;
+      return;
     }
-  } catch (error) {
-    console.error("Signup error:", error);
-    // Here you might want to add a toast or alert to show the error to the user
+
+    // If signup successful, redirect to login with success parameter
+    if (data?.user) {
+      await navigateTo("/login?email_confirmation=success");
+    }
+  } catch (err) {
+    console.error("Signup error:", err);
+    error.value = "An unexpected error occurred during signup";
   } finally {
     loading.value = false;
   }
 };
 
 const signWithGoogle = async () => {
-  const { error, } = await auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: window.location.origin + "/app/messenger",
-    },
-  });
-  if (error) console.log(error);
+  try {
+    error.value = null;
+    const { error: oauthError } = await auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: window.location.origin + "/app/messenger",
+      },
+    });
+    if (oauthError) {
+      error.value = oauthError.message;
+    }
+  } catch (err) {
+    console.error("Google sign in error:", err);
+    error.value = "Failed to sign in with Google";
+  }
 };
 
 const signWithGithub = async () => {
-  const { error } = await auth.signInWithOAuth({
-    provider: "github",
-    options: {
-      redirectTo: window.location.origin + "/app/messenger",
-    },
-  });
-  if (error) console.log(error);
+  try {
+    error.value = null;
+    const { error: oauthError } = await auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: window.location.origin + "/app/messenger",
+      },
+    });
+    if (oauthError) {
+      error.value = oauthError.message;
+    }
+  } catch (err) {
+    console.error("GitHub sign in error:", err);
+    error.value = "Failed to sign in with GitHub";
+  }
 };
 </script>
 
 <template>
   <div class="flex min-h-full flex-col justify-center py-12 px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
-
       <h2
         class="mt-6 text-center text-3xl font-bold tracking-tight text-primary"
       >
@@ -89,6 +129,11 @@ const signWithGithub = async () => {
       </h2>
     </div>
     <div class="sm:mx-auto sm:w-full sm:max-w-md mt-12">
+      <!-- Error Alert -->
+      <div v-if="error" class="mb-4 p-4 bg-red-100 text-red-700 rounded-md">
+        {{ error }}
+      </div>
+
       <Loader v-if="loading" />
       <form class="space-y-6" @submit.prevent="signup" v-else>
         <input
@@ -99,6 +144,7 @@ const signWithGithub = async () => {
           placeholder="Username"
           class="input"
           v-model="username"
+          :disabled="loading"
         />
         <div class="flex flex-row gap-2">
           <input
@@ -109,6 +155,7 @@ const signWithGithub = async () => {
             placeholder="Firstname"
             class="input"
             v-model="firstname"
+            :disabled="loading"
           />
           <input
             id="lastname"
@@ -118,6 +165,7 @@ const signWithGithub = async () => {
             placeholder="Lastname"
             class="input"
             v-model="lastname"
+            :disabled="loading"
           />
         </div>
         <input
@@ -129,6 +177,7 @@ const signWithGithub = async () => {
           placeholder="Email"
           class="input"
           v-model="email"
+          :disabled="loading"
         />
         <input
           id="password"
@@ -139,6 +188,7 @@ const signWithGithub = async () => {
           placeholder="Password"
           class="input"
           v-model="password"
+          :disabled="loading"
         />
         <input
           id="confirm-password"
@@ -149,15 +199,53 @@ const signWithGithub = async () => {
           placeholder="Confirm Password"
           class="input"
           v-model="passwordConfirm"
+          :disabled="loading"
         />
         <div>
-          <button type="submit" class="btn-primary">
-            Sign up
+          <button
+            type="submit"
+            class="btn-primary w-full"
+            :disabled="loading"
+          >
+            {{ loading ? 'Signing up...' : 'Sign up' }}
           </button>
         </div>
       </form>
-      <NuxtLink :to="{ name: 'Login' }" class="btn-secondary mt-6">
-        Already have an account ? Login here
+
+      <!-- OAuth Sign-in Buttons -->
+      <!-- <div class="mt-5"> -->
+      <!--   <div class="relative"> -->
+      <!--     <div class="absolute inset-0 flex items-center"> -->
+      <!--       <div class="w-full border-t border-gray-300"></div> -->
+      <!--     </div> -->
+      <!--     <div class="relative flex justify-center text-sm"> -->
+      <!--       <span class="px-2 bg-white text-gray-500">Or continue with</span> -->
+      <!--     </div> -->
+      <!--   </div> -->
+
+      <!--   <div class="mt-6 grid grid-cols-2 gap-3"> -->
+      <!--     <button -->
+      <!--       @click="signWithGoogle" -->
+      <!--       class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50" -->
+      <!--       :disabled="loading" -->
+      <!--     > -->
+      <!--       <span class="sr-only">Sign in with Google</span> -->
+      <!--       Google -->
+      <!--     </button> -->
+
+      <!--     <button -->
+      <!--       @click="signWithGithub" -->
+      <!--       class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50" -->
+      <!--       :disabled="loading" -->
+      <!--     > -->
+      <!--       <span class="sr-only">Sign in with GitHub</span> -->
+      <!--       GitHub -->
+      <!--     </button> -->
+      <!--   </div> -->
+      <!-- </div> -->
+
+      <NuxtLink :to="{ name: 'Login' }" class="block w-full btn-secondary mt-6 text-center">
+        Already have an account? Login here
       </NuxtLink>
     </div>
   </div>
