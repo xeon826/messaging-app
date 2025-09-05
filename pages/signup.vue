@@ -159,28 +159,6 @@ const signWithGithub = async () => {
       <NuxtLink :to="{ name: 'Login' }" class="btn-secondary mt-6">
         Already have an account ? Login here
       </NuxtLink>
-      <div class="mt-12 hidden">
-        <div class="relative">
-          <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t border-sm border-muted" />
-          </div>
-          <div class="relative flex justify-center text-sm">
-            <span class="bg-primary px-2 text-muted">Or continue with</span>
-          </div>
-        </div>
-      </div>
-      <div class="mt-6 grid grid-cols-2 gap-3">
-        <div>
-          <button type="button" class="btn-secondary" @click="signWithGoogle">
-            <i class="fab fa-google mr-2"></i>
-          </button>
-        </div>
-        <div>
-          <button type="button" class="btn-secondary" @click="signWithGithub">
-            <i class="fab fa-github mr-2"></i>
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </template>

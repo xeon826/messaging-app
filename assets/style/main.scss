@@ -27,4 +27,120 @@
     @apply bg-clip-text text-transparent;
     @apply bg-gradient-to-bl from-accent-main to-accent-secondary;
   }
+
+  /* Button Base Styles */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md border transition-colors duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Primary Button */
+  .btn-primary {
+    @apply btn bg-blue-600 text-white border-transparent;
+    @apply hover:bg-blue-700 focus:ring-blue-500;
+    @apply active:bg-blue-800;
+  }
+
+  /* Secondary Button */
+  .btn-secondary {
+    @apply btn bg-gray-600 text-white border-transparent;
+    @apply hover:bg-gray-700 focus:ring-gray-500;
+    @apply active:bg-gray-800;
+  }
+
+  /* Success Button */
+  .btn-success {
+    @apply btn bg-green-600 text-white border-transparent;
+    @apply hover:bg-green-700 focus:ring-green-500;
+    @apply active:bg-green-800;
+  }
+
+  /* Danger Button */
+  .btn-danger {
+    @apply btn bg-red-600 text-white border-transparent;
+    @apply hover:bg-red-700 focus:ring-red-500;
+    @apply active:bg-red-800;
+  }
+
+  /* Warning Button */
+  .btn-warning {
+    @apply btn bg-yellow-600 text-white border-transparent;
+    @apply hover:bg-yellow-700 focus:ring-yellow-500;
+    @apply active:bg-yellow-800;
+  }
+
+  /* Info Button */
+  .btn-info {
+    @apply btn bg-cyan-600 text-white border-transparent;
+    @apply hover:bg-cyan-700 focus:ring-cyan-500;
+    @apply active:bg-cyan-800;
+  }
+
+  /* Light Button */
+  .btn-light {
+    @apply btn bg-gray-100 text-gray-900 border-gray-300;
+    @apply hover:bg-gray-200 focus:ring-gray-500;
+    @apply active:bg-gray-300;
+  }
+
+  /* Dark Button */
+  .btn-dark {
+    @apply btn bg-gray-800 text-white border-transparent;
+    @apply hover:bg-gray-900 focus:ring-gray-700;
+    @apply active:bg-black;
+  }
+
+  /* Outline Variants */
+  .btn-outline-primary {
+    @apply btn bg-transparent text-blue-600 border-blue-600;
+    @apply hover:bg-blue-600 hover:text-white focus:ring-blue-500;
+  }
+
+  .btn-outline-secondary {
+    @apply btn bg-transparent text-gray-600 border-gray-600;
+    @apply hover:bg-gray-600 hover:text-white focus:ring-gray-500;
+  }
+
+  .btn-outline-success {
+    @apply btn bg-transparent text-green-600 border-green-600;
+    @apply hover:bg-green-600 hover:text-white focus:ring-green-500;
+  }
+
+  .btn-outline-danger {
+    @apply btn bg-transparent text-red-600 border-red-600;
+    @apply hover:bg-red-600 hover:text-white focus:ring-red-500;
+  }
+
+  /* Size Variants */
+  .btn-sm {
+    @apply px-3 py-1.5 text-xs;
+  }
+
+  .btn-lg {
+    @apply px-6 py-3 text-base;
+  }
+
+  .btn-xl {
+    @apply px-8 py-4 text-lg;
+  }
+
+  /* Block Button */
+  .btn-block {
+    @apply w-full;
+  }
+
+  /* Ghost Button */
+  .btn-ghost {
+    @apply btn bg-transparent border-transparent;
+    @apply hover:bg-gray-100 dark:hover:bg-gray-800;
+    @apply focus:ring-gray-500;
+  }
+
+  /* Link Button */
+  .btn-link {
+    @apply btn bg-transparent border-transparent text-blue-600 p-0;
+    @apply hover:text-blue-800 hover:underline focus:ring-0;
+    @apply active:text-blue-900;
+  }
 }
