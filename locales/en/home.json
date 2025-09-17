@@ -1,8 +1,7 @@
 {
   "hero": {
-    "part1": "Messaging App",
-    "part2": "",
-    "subtitle": "Built with Nuxt 3, NuxtUI, coupled with TailwindCSS, and Bun !!!",
+    "header": "Messaging App",
+    "subtitle": "Built with Nuxt 3, NuxtUI, TailwindCSS, and Typescript.",
     "cta": "Get Started"
   },
   "test": "Test notifications",

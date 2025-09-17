@@ -1,9 +1,8 @@
 {
   "hero" : {
-    "part1" : "Une template pas comme les autres",
-    "part2" : "Celle-ci est faite avec ❤",
-    "subtitle" : "Profitez de la puissance de Nuxt 3, NuxtUI couplé à TailwindCSS, Bun, Resend et autres avec juste un clone git ! !!",
-    "cta" : "Commencer maintenant !"
+    "header" : "Application de messagerie",
+    "subtitle" : "Construit avec Nuxt 3, NuxtUI, TailwindCSS et Typescript.",
+    "cta" : "Commencer maintenant"
   },
   "test" : "Testez les notifications",
   "test_toast" : "Ceci est une notification",
