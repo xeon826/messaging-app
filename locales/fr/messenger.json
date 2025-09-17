@@ -1,8 +1,8 @@
 {
-  "title": "Messenger",
-  "description": "Let's talk about your ideas, projects or anything else",
+  "title": "Messagerie",
+  "description": "Parlons de vos idées, projets ou autre chose",
   "fullname": "Nom complet",
-  "loading": "Loading users...",
+  "loading": "Chargement des utilisateurs...",
   "email": "Email",
   "phone": "Téléphone",
   "subject": "Sujet de votre message",
@@ -11,13 +11,7 @@
   "average_response_time": "Je réponds généralement entre 2 et 5 heures",
   "success": "Votre message a été envoyé avec succès",
   "error": "Oups, une erreur est survenue lors de l'envoi de votre message",
-  "budget": "Budget",
-  "subject_types": {
-    "project": "Projet",
-    "bug": "Bug",
-    "question": "Question",
-    "other": "Autre"
-  }
+  "budget": "Budget"
 }
 
 
